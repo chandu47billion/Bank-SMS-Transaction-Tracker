@@ -1,11 +1,11 @@
-import React, { useState } from 'react';
-import { View, Text, StyleSheet, ScrollView } from 'react-native';
-import { useTheme } from 'react-native-paper';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import React, {useState} from 'react';
+import {View, Text, StyleSheet, ScrollView} from 'react-native';
+import {useTheme} from 'react-native-paper';
+import {SafeAreaView} from 'react-native-safe-area-context';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import { useNavigation } from '@react-navigation/native';
-import { useApp } from '../store/AppContext';
-import { Button } from '../components/common';
+import {useNavigation} from '@react-navigation/native';
+import {useApp} from '../store/AppContext';
+import {Button} from '../components/common';
 
 const BULLETS = [
   'Reads transaction SMS from your banks',
@@ -16,7 +16,7 @@ const BULLETS = [
 export default function PermissionScreen() {
   const theme = useTheme();
   const navigation = useNavigation();
-  const { requestAndSyncSms } = useApp();
+  const {requestAndSyncSms} = useApp();
   const [loading, setLoading] = useState(false);
   const [denied, setDenied] = useState(false);
 
@@ -42,28 +42,55 @@ export default function PermissionScreen() {
   };
 
   return (
-    <SafeAreaView style={[styles.safe, { backgroundColor: theme.colors.background }]} edges={['top', 'bottom']}>
-      <ScrollView contentContainerStyle={styles.scroll} showsVerticalScrollIndicator={false}>
+    <SafeAreaView
+      style={[styles.safe, {backgroundColor: theme.colors.background}]}
+      edges={['top', 'bottom']}>
+      <ScrollView
+        contentContainerStyle={styles.scroll}
+        showsVerticalScrollIndicator={false}>
         {/* Icon badge */}
-        <View style={[styles.iconCircle, { backgroundColor: `${theme.colors.primary}18` }]}>
-          <Icon name="message-alert-outline" size={72} color={theme.colors.primary} />
+        <View
+          style={[
+            styles.iconCircle,
+            {backgroundColor: `${theme.colors.primary}18`},
+          ]}>
+          <Icon
+            name="message-alert-outline"
+            size={72}
+            color={theme.colors.primary}
+          />
         </View>
 
-        <Text style={[styles.title, { color: theme.colors.textPrimary }]}>
+        <Text style={[styles.title, {color: theme.colors.textPrimary}]}>
           Enable SMS Access
         </Text>
 
-        <Text style={[styles.description, { color: theme.colors.textSecondary }]}>
-          MoneyFlow scans your SMS inbox locally on your device to automatically detect bank
-          transactions. No data ever leaves your phone.
+        <Text style={[styles.description, {color: theme.colors.textSecondary}]}>
+          MoneyFlow scans your SMS inbox locally on your device to automatically
+          detect bank transactions. No data ever leaves your phone.
         </Text>
 
         {/* Bullet list */}
-        <View style={[styles.bulletCard, { backgroundColor: theme.colors.surface, borderColor: theme.colors.border }]}>
+        <View
+          style={[
+            styles.bulletCard,
+            {
+              backgroundColor: theme.colors.surface,
+              borderColor: theme.colors.border,
+            },
+          ]}>
           {BULLETS.map((item, index) => (
             <View key={index} style={styles.bulletRow}>
-              <Icon name="check-circle" size={20} color={theme.colors.secondary} style={styles.bulletIcon} />
-              <Text style={[styles.bulletText, { color: theme.colors.textPrimary }]}>{item}</Text>
+              <Icon
+                name="check-circle"
+                size={20}
+                color={theme.colors.secondary}
+                style={styles.bulletIcon}
+              />
+              <Text
+                style={[styles.bulletText, {color: theme.colors.textPrimary}]}>
+                {item}
+              </Text>
             </View>
           ))}
         </View>
@@ -83,9 +110,15 @@ export default function PermissionScreen() {
         {/* Denied state */}
         {denied && (
           <View style={styles.deniedContainer}>
-            <Icon name="alert-circle-outline" size={18} color={theme.colors.error} style={styles.deniedIcon} />
-            <Text style={[styles.deniedText, { color: theme.colors.error }]}>
-              Permission denied — you can still use the app, sample data will be shown
+            <Icon
+              name="alert-circle-outline"
+              size={18}
+              color={theme.colors.error}
+              style={styles.deniedIcon}
+            />
+            <Text style={[styles.deniedText, {color: theme.colors.error}]}>
+              Permission denied — you can still use the app, sample data will be
+              shown
             </Text>
           </View>
         )}

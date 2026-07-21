@@ -1,10 +1,10 @@
-import React, { useEffect } from 'react';
-import { View, Text, StyleSheet } from 'react-native';
-import { ActivityIndicator } from 'react-native-paper';
+import React, {useEffect} from 'react';
+import {View, Text, StyleSheet} from 'react-native';
+import {ActivityIndicator} from 'react-native-paper';
 import LinearGradient from 'react-native-linear-gradient';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import { gradients } from '../theme/colors';
+import {SafeAreaView} from 'react-native-safe-area-context';
+import {gradients} from '../theme/colors';
 
 export default function SplashScreen() {
   // Navigation is driven entirely by AppNavigator via the isReady flag.
@@ -56,7 +56,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginBottom: 28,
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 8 },
+    shadowOffset: {width: 0, height: 8},
     shadowOpacity: 0.25,
     shadowRadius: 16,
     elevation: 12,

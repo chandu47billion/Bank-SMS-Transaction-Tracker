@@ -1,6 +1,6 @@
 import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
-import { Portal, Dialog, Button, useTheme } from 'react-native-paper';
+import {View, Text, StyleSheet} from 'react-native';
+import {Portal, Dialog, Button, useTheme} from 'react-native-paper';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 export default function SuccessDialog({
@@ -16,24 +16,22 @@ export default function SuccessDialog({
       <Dialog
         visible={visible}
         onDismiss={onDismiss}
-        style={[styles.dialog, { backgroundColor: theme.colors.surface }]}
-      >
+        style={[styles.dialog, {backgroundColor: theme.colors.surface}]}>
         <Dialog.Content style={styles.content}>
           <View
             style={[
               styles.iconCircle,
-              { backgroundColor: theme.colors.income + '1A' },
-            ]}
-          >
+              {backgroundColor: theme.colors.income + '1A'},
+            ]}>
             <Icon name="check-circle" size={56} color={theme.colors.income} />
           </View>
 
-          <Text style={[styles.title, { color: theme.colors.textPrimary }]}>
+          <Text style={[styles.title, {color: theme.colors.textPrimary}]}>
             {title}
           </Text>
 
           {message ? (
-            <Text style={[styles.message, { color: theme.colors.textSecondary }]}>
+            <Text style={[styles.message, {color: theme.colors.textSecondary}]}>
               {message}
             </Text>
           ) : null}
@@ -46,8 +44,7 @@ export default function SuccessDialog({
             buttonColor={theme.colors.income}
             textColor="#FFFFFF"
             style={styles.doneButton}
-            labelStyle={styles.doneLabel}
-          >
+            labelStyle={styles.doneLabel}>
             Done
           </Button>
         </Dialog.Actions>

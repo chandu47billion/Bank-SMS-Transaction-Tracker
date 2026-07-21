@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React, {useMemo} from 'react';
 import {
   View,
   Text,
@@ -7,33 +7,44 @@ import {
   RefreshControl,
   TouchableOpacity,
 } from 'react-native';
-import { useTheme } from 'react-native-paper';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import {useTheme} from 'react-native-paper';
+import {SafeAreaView} from 'react-native-safe-area-context';
 import LinearGradient from 'react-native-linear-gradient';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import { useNavigation } from '@react-navigation/native';
+import {useNavigation} from '@react-navigation/native';
 
-import { useApp } from '../../store/AppContext';
-import { formatCurrency } from '../../utils/formatters';
+import {useApp} from '../../store/AppContext';
+import {formatCurrency} from '../../utils/formatters';
 import {
   getCurrentMonthRange,
   getTodayRange,
   summarizeTransactions,
   groupByCategory,
 } from '../../utils/helpers';
-import { gradients } from '../../theme/colors';
-import { Card, TransactionItem, EmptyState, Avatar } from '../../components/common';
-import { SpendingPieChart, IncomeExpenseChart } from '../../components/charts';
+import {gradients} from '../../theme/colors';
+import {
+  Card,
+  TransactionItem,
+  EmptyState,
+  Avatar,
+} from '../../components/common';
+import {SpendingPieChart, IncomeExpenseChart} from '../../components/charts';
 
 function getGreeting() {
   const hour = new Date().getHours();
-  if (hour < 12) return 'Good morning';
-  if (hour < 17) return 'Good afternoon';
+  if (hour < 12) {
+    return 'Good morning';
+  }
+  if (hour < 17) {
+    return 'Good afternoon';
+  }
   return 'Good evening';
 }
 
 function getFirstName(fullName) {
-  if (!fullName) return 'there';
+  if (!fullName) {
+    return 'there';
+  }
   return fullName.trim().split(' ')[0];
 }
 
@@ -45,7 +56,7 @@ function daysElapsedInMonth() {
 export default function DashboardScreen() {
   const theme = useTheme();
   const navigation = useNavigation();
-  const { transactions, refreshing, refreshTransactions, userName } = useApp();
+  const {transactions, refreshing, refreshTransactions, userName} = useApp();
 
   const monthRange = useMemo(() => getCurrentMonthRange(), []);
   const todayRange = useMemo(() => getTodayRange(), []);
@@ -53,7 +64,9 @@ export default function DashboardScreen() {
   const monthlyTxns = useMemo(
     () =>
       transactions.filter(
-        t => t.timestamp >= monthRange.startISO && t.timestamp <= monthRange.endISO,
+        t =>
+          t.timestamp >= monthRange.startISO &&
+          t.timestamp <= monthRange.endISO,
       ),
     [transactions, monthRange],
   );
@@ -61,27 +74,40 @@ export default function DashboardScreen() {
   const todayTxns = useMemo(
     () =>
       transactions.filter(
-        t => t.timestamp >= todayRange.startISO && t.timestamp <= todayRange.endISO,
+        t =>
+          t.timestamp >= todayRange.startISO &&
+          t.timestamp <= todayRange.endISO,
       ),
     [transactions, todayRange],
   );
 
-  const monthlySummary = useMemo(() => summarizeTransactions(monthlyTxns), [monthlyTxns]);
-  const todaySummary = useMemo(() => summarizeTransactions(todayTxns), [todayTxns]);
-  const categoryData = useMemo(() => groupByCategory(monthlyTxns), [monthlyTxns]);
+  const monthlySummary = useMemo(
+    () => summarizeTransactions(monthlyTxns),
+    [monthlyTxns],
+  );
+  const todaySummary = useMemo(
+    () => summarizeTransactions(todayTxns),
+    [todayTxns],
+  );
+  const categoryData = useMemo(
+    () => groupByCategory(monthlyTxns),
+    [monthlyTxns],
+  );
 
   const latestBalance = useMemo(() => {
     const withBalance = transactions.filter(t => t.balance != null);
-    if (!withBalance.length) return 0;
-    const sorted = [...withBalance].sort((a, b) =>
-      b.timestamp > a.timestamp ? 1 : -1,
+    if (!withBalance.length) {
+      return 0;
+    }
+    const sorted = [...withBalance].sort(
+      (a, b) => new Date(b.timestamp) - new Date(a.timestamp),
     );
     return sorted[0].balance;
   }, [transactions]);
 
   const recentTransactions = useMemo(() => {
     return [...transactions]
-      .sort((a, b) => (b.timestamp > a.timestamp ? 1 : -1))
+      .sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp))
       .slice(0, 5);
   }, [transactions]);
 
@@ -94,7 +120,9 @@ export default function DashboardScreen() {
     latestBalance >= 0 ? theme.colors.income : theme.colors.expense;
 
   return (
-    <SafeAreaView style={[styles.safe, { backgroundColor: theme.colors.background }]} edges={['top']}>
+    <SafeAreaView
+      style={[styles.safe, {backgroundColor: theme.colors.background}]}
+      edges={['top']}>
       <ScrollView
         showsVerticalScrollIndicator={false}
         refreshControl={
@@ -104,8 +132,7 @@ export default function DashboardScreen() {
             colors={[theme.colors.primary]}
             tintColor={theme.colors.primary}
           />
-        }
-      >
+        }>
         {/* ── Header ── */}
         <LinearGradient colors={gradients.header} style={styles.headerGradient}>
           <View style={styles.headerTop}>
@@ -113,17 +140,22 @@ export default function DashboardScreen() {
               <Text style={styles.headerGreeting}>
                 {getGreeting()}, {getFirstName(userName)}!
               </Text>
-              <Text style={styles.headerSubtitle}>Here's your financial overview</Text>
+              <Text style={styles.headerSubtitle}>
+                Here's your financial overview
+              </Text>
             </View>
             <View style={styles.headerActions}>
               <TouchableOpacity
                 onPress={() => navigation.navigate('Notifications')}
-                style={styles.bellButton}
-              >
+                style={styles.bellButton}>
                 <Icon name="bell-outline" size={22} color="#FFFFFF" />
               </TouchableOpacity>
               <TouchableOpacity onPress={() => navigation.navigate('Profile')}>
-                <Avatar name={userName} size={38} backgroundColor="rgba(255,255,255,0.25)" />
+                <Avatar
+                  name={userName}
+                  size={38}
+                  backgroundColor="rgba(255,255,255,0.25)"
+                />
               </TouchableOpacity>
             </View>
           </View>
@@ -132,10 +164,14 @@ export default function DashboardScreen() {
         <View style={styles.content}>
           {/* ── Net Balance Card ── */}
           <Card style={styles.balanceCard} elevation={3}>
-            <Text style={[styles.balanceLabel, { color: theme.colors.textSecondary }]}>
+            <Text
+              style={[
+                styles.balanceLabel,
+                {color: theme.colors.textSecondary},
+              ]}>
               Total Balance
             </Text>
-            <Text style={[styles.balanceAmount, { color: balanceColor }]}>
+            <Text style={[styles.balanceAmount, {color: balanceColor}]}>
               {formatCurrency(latestBalance)}
             </Text>
           </Card>
@@ -144,58 +180,84 @@ export default function DashboardScreen() {
           <View style={styles.row}>
             <Card style={[styles.halfCard, styles.rowCardLeft]} elevation={2}>
               <View style={styles.statIconRow}>
-                <View style={[styles.statIconBadge, { backgroundColor: `${theme.colors.income}18` }]}>
-                  <Icon name="arrow-down-circle-outline" size={20} color={theme.colors.income} />
+                <View
+                  style={[
+                    styles.statIconBadge,
+                    {backgroundColor: `${theme.colors.income}18`},
+                  ]}>
+                  <Icon
+                    name="arrow-down-circle-outline"
+                    size={20}
+                    color={theme.colors.income}
+                  />
                 </View>
               </View>
-              <Text style={[styles.statLabel, { color: theme.colors.textSecondary }]}>
+              <Text
+                style={[styles.statLabel, {color: theme.colors.textSecondary}]}>
                 Today's Credit
               </Text>
-              <Text style={[styles.statAmount, { color: theme.colors.income }]}>
-                {formatCurrency(todaySummary.credit, { compact: true })}
+              <Text style={[styles.statAmount, {color: theme.colors.income}]}>
+                {formatCurrency(todaySummary.credit, {compact: true})}
               </Text>
             </Card>
 
             <Card style={[styles.halfCard, styles.rowCardRight]} elevation={2}>
               <View style={styles.statIconRow}>
-                <View style={[styles.statIconBadge, { backgroundColor: `${theme.colors.expense}18` }]}>
-                  <Icon name="arrow-up-circle-outline" size={20} color={theme.colors.expense} />
+                <View
+                  style={[
+                    styles.statIconBadge,
+                    {backgroundColor: `${theme.colors.expense}18`},
+                  ]}>
+                  <Icon
+                    name="arrow-up-circle-outline"
+                    size={20}
+                    color={theme.colors.expense}
+                  />
                 </View>
               </View>
-              <Text style={[styles.statLabel, { color: theme.colors.textSecondary }]}>
+              <Text
+                style={[styles.statLabel, {color: theme.colors.textSecondary}]}>
                 Today's Debit
               </Text>
-              <Text style={[styles.statAmount, { color: theme.colors.expense }]}>
-                {formatCurrency(todaySummary.debit, { compact: true })}
+              <Text style={[styles.statAmount, {color: theme.colors.expense}]}>
+                {formatCurrency(todaySummary.debit, {compact: true})}
               </Text>
             </Card>
           </View>
 
           {/* ── Monthly summary ── */}
           <Card style={styles.sectionCard} elevation={2}>
-            <Text style={[styles.sectionTitle, { color: theme.colors.textPrimary }]}>
+            <Text
+              style={[styles.sectionTitle, {color: theme.colors.textPrimary}]}>
               This Month
             </Text>
-            <IncomeExpenseChart income={monthlySummary.credit} expense={monthlySummary.debit} />
+            <IncomeExpenseChart
+              income={monthlySummary.credit}
+              expense={monthlySummary.debit}
+            />
           </Card>
 
           {/* ── Quick stats row ── */}
           <View style={styles.row}>
             <Card style={[styles.halfCard, styles.rowCardLeft]} elevation={2}>
-              <Text style={[styles.statLabel, { color: theme.colors.textSecondary }]}>
+              <Text
+                style={[styles.statLabel, {color: theme.colors.textSecondary}]}>
                 Transactions
               </Text>
-              <Text style={[styles.statCount, { color: theme.colors.textPrimary }]}>
+              <Text
+                style={[styles.statCount, {color: theme.colors.textPrimary}]}>
                 {monthlySummary.count}
               </Text>
             </Card>
 
             <Card style={[styles.halfCard, styles.rowCardRight]} elevation={2}>
-              <Text style={[styles.statLabel, { color: theme.colors.textSecondary }]}>
+              <Text
+                style={[styles.statLabel, {color: theme.colors.textSecondary}]}>
                 Avg per day
               </Text>
-              <Text style={[styles.statCount, { color: theme.colors.textPrimary }]}>
-                {formatCurrency(avgPerDay, { compact: true })}
+              <Text
+                style={[styles.statCount, {color: theme.colors.textPrimary}]}>
+                {formatCurrency(avgPerDay, {compact: true})}
               </Text>
             </Card>
           </View>
@@ -203,7 +265,11 @@ export default function DashboardScreen() {
           {/* ── Spending by Category ── */}
           {categoryData.length > 0 && (
             <Card style={styles.sectionCard} elevation={2}>
-              <Text style={[styles.sectionTitle, { color: theme.colors.textPrimary }]}>
+              <Text
+                style={[
+                  styles.sectionTitle,
+                  {color: theme.colors.textPrimary},
+                ]}>
                 Spending by Category
               </Text>
               <SpendingPieChart data={categoryData} size={220} />
@@ -212,11 +278,15 @@ export default function DashboardScreen() {
 
           {/* ── Recent Transactions ── */}
           <View style={styles.recentHeader}>
-            <Text style={[styles.sectionTitle, { color: theme.colors.textPrimary }]}>
+            <Text
+              style={[styles.sectionTitle, {color: theme.colors.textPrimary}]}>
               Recent Transactions
             </Text>
-            <TouchableOpacity onPress={() => navigation.navigate('Transactions')}>
-              <Text style={[styles.seeAll, { color: theme.colors.primary }]}>See All</Text>
+            <TouchableOpacity
+              onPress={() => navigation.navigate('Transactions')}>
+              <Text style={[styles.seeAll, {color: theme.colors.primary}]}>
+                See All
+              </Text>
             </TouchableOpacity>
           </View>
 
@@ -232,10 +302,17 @@ export default function DashboardScreen() {
                 <View key={txn.id}>
                   <TransactionItem
                     transaction={txn}
-                    onPress={() => navigation.navigate('TransactionDetail', { id: txn.id })}
+                    onPress={() =>
+                      navigation.navigate('TransactionDetail', {id: txn.id})
+                    }
                   />
                   {index < recentTransactions.length - 1 && (
-                    <View style={[styles.divider, { backgroundColor: theme.colors.border }]} />
+                    <View
+                      style={[
+                        styles.divider,
+                        {backgroundColor: theme.colors.border},
+                      ]}
+                    />
                   )}
                 </View>
               ))}

@@ -1,4 +1,4 @@
-import React, { useMemo, useState, useCallback } from 'react';
+import React, {useMemo, useState, useCallback} from 'react';
 import {
   View,
   Text,
@@ -7,17 +7,21 @@ import {
   TouchableOpacity,
   FlatList,
 } from 'react-native';
-import { useTheme, ProgressBar, TextInput } from 'react-native-paper';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import {useTheme, ProgressBar, TextInput} from 'react-native-paper';
+import {SafeAreaView} from 'react-native-safe-area-context';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
-import { useApp } from '../../store/AppContext';
-import { CATEGORIES } from '../../data/categories';
-import { getCurrentMonthRange, groupByCategory, clamp } from '../../utils/helpers';
-import { formatCurrency, getMonthLabel } from '../../utils/formatters';
-import { IncomeExpenseChart } from '../../components/charts';
-import { Card, Button } from '../../components/common';
-import { BottomSheet, SuccessDialog } from '../../components/dialogs';
+import {useApp} from '../../store/AppContext';
+import {CATEGORIES} from '../../data/categories';
+import {
+  getCurrentMonthRange,
+  groupByCategory,
+  clamp,
+} from '../../utils/helpers';
+import {formatCurrency, getMonthLabel} from '../../utils/formatters';
+import {IncomeExpenseChart} from '../../components/charts';
+import {Card, Button} from '../../components/common';
+import {BottomSheet, SuccessDialog} from '../../components/dialogs';
 
 function getCurrentMonthKey() {
   const now = new Date();
@@ -28,7 +32,7 @@ function getCurrentMonthKey() {
 
 export default function BudgetScreen() {
   const theme = useTheme();
-  const { transactions, budgets, updateBudget } = useApp();
+  const {transactions, budgets, updateBudget} = useApp();
 
   const [sheetVisible, setSheetVisible] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState(null);
@@ -44,7 +48,9 @@ export default function BudgetScreen() {
   const monthlyTxns = useMemo(
     () =>
       transactions.filter(
-        t => t.timestamp >= monthRange.startISO && t.timestamp <= monthRange.endISO,
+        t =>
+          t.timestamp >= monthRange.startISO &&
+          t.timestamp <= monthRange.endISO,
       ),
     [transactions, monthRange],
   );
@@ -52,7 +58,7 @@ export default function BudgetScreen() {
   const spendByCategoryId = useMemo(() => {
     const grouped = groupByCategory(monthlyTxns);
     const map = {};
-    grouped.forEach(({ categoryId, total }) => {
+    grouped.forEach(({categoryId, total}) => {
       map[categoryId] = total;
     });
     return map;
@@ -84,12 +90,15 @@ export default function BudgetScreen() {
     }).length;
   }, [budgetByCategoryId, spendByCategoryId]);
 
-  const openSheet = useCallback((cat) => {
-    setSelectedCategory(cat);
-    const current = budgetByCategoryId[cat.id];
-    setInputValue(current ? String(current) : '');
-    setSheetVisible(true);
-  }, [budgetByCategoryId]);
+  const openSheet = useCallback(
+    cat => {
+      setSelectedCategory(cat);
+      const current = budgetByCategoryId[cat.id];
+      setInputValue(current ? String(current) : '');
+      setSheetVisible(true);
+    },
+    [budgetByCategoryId],
+  );
 
   const closeSheet = useCallback(() => {
     setSheetVisible(false);
@@ -98,9 +107,13 @@ export default function BudgetScreen() {
   }, []);
 
   const handleSave = useCallback(async () => {
-    if (!selectedCategory) return;
+    if (!selectedCategory) {
+      return;
+    }
     const amount = Number(inputValue);
-    if (!amount || amount <= 0) return;
+    if (!amount || amount <= 0) {
+      return;
+    }
     setSaving(true);
     try {
       await updateBudget(selectedCategory.id, amount);
@@ -113,66 +126,84 @@ export default function BudgetScreen() {
 
   const s = styles(theme);
 
-  const renderCategoryRow = useCallback(({ item: cat }) => {
-    const spent = spendByCategoryId[cat.id] || 0;
-    const limit = budgetByCategoryId[cat.id] || 0;
-    const hasBudget = limit > 0;
-    const progress = hasBudget ? clamp(spent / limit, 0, 1) : 0;
-    const isOverspent = hasBudget && spent > limit;
-    const remaining = limit - spent;
-    const overage = spent - limit;
-    const barColor = isOverspent ? theme.colors.expense : theme.colors.primary;
+  const renderCategoryRow = useCallback(
+    ({item: cat}) => {
+      const spent = spendByCategoryId[cat.id] || 0;
+      const limit = budgetByCategoryId[cat.id] || 0;
+      const hasBudget = limit > 0;
+      const progress = hasBudget ? clamp(spent / limit, 0, 1) : 0;
+      const isOverspent = hasBudget && spent > limit;
+      const remaining = limit - spent;
+      const overage = spent - limit;
+      const barColor = isOverspent
+        ? theme.colors.expense
+        : theme.colors.primary;
 
-    return (
-      <TouchableOpacity onPress={() => openSheet(cat)} activeOpacity={0.75}>
-        <Card style={s.categoryCard}>
-          <View style={s.categoryRow}>
-            <View style={[s.iconCircle, { backgroundColor: cat.color + '22' }]}>
-              <Text style={s.emoji}>{cat.emoji}</Text>
-            </View>
-            <View style={s.categoryInfo}>
-              <Text style={s.categoryName}>{cat.name}</Text>
-              {hasBudget ? (
-                <>
-                  <ProgressBar
-                    progress={progress}
-                    color={barColor}
-                    style={s.progressBar}
-                  />
-                  <View style={s.budgetTextRow}>
+      return (
+        <TouchableOpacity onPress={() => openSheet(cat)} activeOpacity={0.75}>
+          <Card style={s.categoryCard}>
+            <View style={s.categoryRow}>
+              <View style={[s.iconCircle, {backgroundColor: cat.color + '22'}]}>
+                <Text style={s.emoji}>{cat.emoji}</Text>
+              </View>
+              <View style={s.categoryInfo}>
+                <Text style={s.categoryName}>{cat.name}</Text>
+                {hasBudget ? (
+                  <>
+                    <ProgressBar
+                      progress={progress}
+                      color={barColor}
+                      style={s.progressBar}
+                    />
+                    <View style={s.budgetTextRow}>
+                      <Text style={s.budgetMeta}>
+                        {formatCurrency(spent)} of {formatCurrency(limit)}
+                      </Text>
+                      {isOverspent ? (
+                        <Text
+                          style={[
+                            s.remainingText,
+                            {color: theme.colors.expense},
+                          ]}>
+                          Over by {formatCurrency(overage)}
+                        </Text>
+                      ) : (
+                        <Text
+                          style={[
+                            s.remainingText,
+                            {color: theme.colors.textSecondary},
+                          ]}>
+                          {formatCurrency(remaining)} left
+                        </Text>
+                      )}
+                    </View>
+                  </>
+                ) : (
+                  <View style={s.noBudgetRow}>
                     <Text style={s.budgetMeta}>
-                      {formatCurrency(spent)} of {formatCurrency(limit)}
+                      {spent > 0
+                        ? `${formatCurrency(spent)} spent`
+                        : 'No spending yet'}
                     </Text>
-                    {isOverspent ? (
-                      <Text style={[s.remainingText, { color: theme.colors.expense }]}>
-                        Over by {formatCurrency(overage)}
-                      </Text>
-                    ) : (
-                      <Text style={[s.remainingText, { color: theme.colors.textSecondary }]}>
-                        {formatCurrency(remaining)} left
-                      </Text>
-                    )}
+                    <Text
+                      style={[s.setBudgetLink, {color: theme.colors.primary}]}>
+                      Set Budget
+                    </Text>
                   </View>
-                </>
-              ) : (
-                <View style={s.noBudgetRow}>
-                  <Text style={s.budgetMeta}>
-                    {spent > 0 ? `${formatCurrency(spent)} spent` : 'No spending yet'}
-                  </Text>
-                  <Text style={[s.setBudgetLink, { color: theme.colors.primary }]}>
-                    Set Budget
-                  </Text>
-                </View>
-              )}
+                )}
+              </View>
             </View>
-          </View>
-        </Card>
-      </TouchableOpacity>
-    );
-  }, [spendByCategoryId, budgetByCategoryId, theme, openSheet, s]);
+          </Card>
+        </TouchableOpacity>
+      );
+    },
+    [spendByCategoryId, budgetByCategoryId, theme, openSheet, s],
+  );
 
   return (
-    <SafeAreaView style={[s.safe, { backgroundColor: theme.colors.background }]} edges={['top']}>
+    <SafeAreaView
+      style={[s.safe, {backgroundColor: theme.colors.background}]}
+      edges={['top']}>
       <View style={s.header}>
         <Text style={s.headerTitle}>Budget</Text>
         <Text style={s.headerSubtitle}>{monthLabel}</Text>
@@ -187,10 +218,23 @@ export default function BudgetScreen() {
         ListHeaderComponent={
           <>
             {overspendingCount > 0 && (
-              <View style={[s.alertBanner, { backgroundColor: theme.colors.expense + '18', borderColor: theme.colors.expense }]}>
-                <Icon name="alert-circle" size={16} color={theme.colors.expense} />
-                <Text style={[s.alertText, { color: theme.colors.expense }]}>
-                  {' '}You are overspending in {overspendingCount} {overspendingCount === 1 ? 'category' : 'categories'}
+              <View
+                style={[
+                  s.alertBanner,
+                  {
+                    backgroundColor: theme.colors.expense + '18',
+                    borderColor: theme.colors.expense,
+                  },
+                ]}>
+                <Icon
+                  name="alert-circle"
+                  size={16}
+                  color={theme.colors.expense}
+                />
+                <Text style={[s.alertText, {color: theme.colors.expense}]}>
+                  {' '}
+                  You are overspending in {overspendingCount}{' '}
+                  {overspendingCount === 1 ? 'category' : 'categories'}
                 </Text>
               </View>
             )}
@@ -200,21 +244,34 @@ export default function BudgetScreen() {
               <IncomeExpenseChart income={totalBudget} expense={totalSpent} />
               <View style={s.summaryRow}>
                 <View style={s.summaryItem}>
-                  <Text style={[s.summaryLabel, { color: theme.colors.textSecondary }]}>Budgeted</Text>
-                  <Text style={[s.summaryAmount, { color: theme.colors.income }]}>
+                  <Text
+                    style={[
+                      s.summaryLabel,
+                      {color: theme.colors.textSecondary},
+                    ]}>
+                    Budgeted
+                  </Text>
+                  <Text style={[s.summaryAmount, {color: theme.colors.income}]}>
                     {formatCurrency(totalBudget)}
                   </Text>
                 </View>
                 <View style={s.summaryItem}>
-                  <Text style={[s.summaryLabel, { color: theme.colors.textSecondary }]}>Spent</Text>
-                  <Text style={[s.summaryAmount, { color: theme.colors.expense }]}>
+                  <Text
+                    style={[
+                      s.summaryLabel,
+                      {color: theme.colors.textSecondary},
+                    ]}>
+                    Spent
+                  </Text>
+                  <Text
+                    style={[s.summaryAmount, {color: theme.colors.expense}]}>
                     {formatCurrency(totalSpent)}
                   </Text>
                 </View>
               </View>
             </Card>
 
-            <Text style={[s.sectionLabel, { color: theme.colors.textSecondary }]}>
+            <Text style={[s.sectionLabel, {color: theme.colors.textSecondary}]}>
               Categories
             </Text>
           </>
@@ -224,15 +281,26 @@ export default function BudgetScreen() {
       <BottomSheet
         visible={sheetVisible}
         onClose={closeSheet}
-        title={selectedCategory ? `Set Budget — ${selectedCategory.name}` : 'Set Budget'}
-      >
+        title={
+          selectedCategory
+            ? `Set Budget — ${selectedCategory.name}`
+            : 'Set Budget'
+        }>
         <View style={s.sheetContent}>
           {selectedCategory && (
             <View style={s.sheetCategoryRow}>
-              <View style={[s.iconCircle, { backgroundColor: selectedCategory.color + '22' }]}>
+              <View
+                style={[
+                  s.iconCircle,
+                  {backgroundColor: selectedCategory.color + '22'},
+                ]}>
                 <Text style={s.emoji}>{selectedCategory.emoji}</Text>
               </View>
-              <Text style={[s.sheetCategoryName, { color: theme.colors.textPrimary }]}>
+              <Text
+                style={[
+                  s.sheetCategoryName,
+                  {color: theme.colors.textPrimary},
+                ]}>
                 {selectedCategory.name}
               </Text>
             </View>

@@ -14,15 +14,27 @@ export const BANK_PATTERNS = [
     bank: 'hdfc',
     label: 'HDFC Bank',
     test: /hdfc/i,
-    debit: new RegExp(`${AMOUNT}\\s?(?:has been)?\\s?debited (?:from|to)?\\s?(?:your)?\\s?${ACCOUNT_TAIL}`, 'i'),
-    credit: new RegExp(`${AMOUNT}\\s?(?:has been)?\\s?credited (?:to|from)?\\s?(?:your)?\\s?${ACCOUNT_TAIL}`, 'i'),
+    debit: new RegExp(
+      `${AMOUNT}\\s?(?:has been)?\\s?debited (?:from|to)?\\s?(?:your)?\\s?${ACCOUNT_TAIL}`,
+      'i',
+    ),
+    credit: new RegExp(
+      `${AMOUNT}\\s?(?:has been)?\\s?credited (?:to|from)?\\s?(?:your)?\\s?${ACCOUNT_TAIL}`,
+      'i',
+    ),
   },
   {
     bank: 'sbi',
     label: 'State Bank of India',
     test: /\bsbi\b/i,
-    debit: new RegExp(`${AMOUNT}\\s?debited\\s?(?:from)?\\s?${ACCOUNT_TAIL}`, 'i'),
-    credit: new RegExp(`${AMOUNT}\\s?credited\\s?(?:to)?\\s?${ACCOUNT_TAIL}`, 'i'),
+    debit: new RegExp(
+      `${AMOUNT}\\s?debited\\s?(?:from)?\\s?${ACCOUNT_TAIL}`,
+      'i',
+    ),
+    credit: new RegExp(
+      `${AMOUNT}\\s?credited\\s?(?:to)?\\s?${ACCOUNT_TAIL}`,
+      'i',
+    ),
   },
   {
     bank: 'icici',
@@ -42,8 +54,14 @@ export const BANK_PATTERNS = [
     bank: 'kotak',
     label: 'Kotak Mahindra Bank',
     test: /kotak/i,
-    debit: new RegExp(`${AMOUNT}\\s?debited\\s?(?:from)?\\s?${ACCOUNT_TAIL}`, 'i'),
-    credit: new RegExp(`${AMOUNT}\\s?credited\\s?(?:to)?\\s?${ACCOUNT_TAIL}`, 'i'),
+    debit: new RegExp(
+      `${AMOUNT}\\s?debited\\s?(?:from)?\\s?${ACCOUNT_TAIL}`,
+      'i',
+    ),
+    credit: new RegExp(
+      `${AMOUNT}\\s?credited\\s?(?:to)?\\s?${ACCOUNT_TAIL}`,
+      'i',
+    ),
   },
   {
     bank: 'pnb',
@@ -56,16 +74,27 @@ export const BANK_PATTERNS = [
 
 // Fallback generic pattern used when no bank-specific pattern matches
 // but the message still clearly looks like a transaction alert.
-export const GENERIC_DEBIT = new RegExp(`${AMOUNT}\\s?(?:has been)?\\s?(?:debited|spent|paid|withdrawn)`, 'i');
-export const GENERIC_CREDIT = new RegExp(`${AMOUNT}\\s?(?:has been)?\\s?(?:credited|received)`, 'i');
+export const GENERIC_DEBIT = new RegExp(
+  `${AMOUNT}\\s?(?:has been)?\\s?(?:debited|spent|paid|withdrawn)`,
+  'i',
+);
+export const GENERIC_CREDIT = new RegExp(
+  `${AMOUNT}\\s?(?:has been)?\\s?(?:credited|received)`,
+  'i',
+);
 
-export const BALANCE_PATTERN = new RegExp(`(?:avl(?:ailable)?\\s?bal(?:ance)?|bal)[:\\s]*${AMOUNT}`, 'i');
-export const REFERENCE_PATTERN = /(?:ref(?:erence)?(?:\s?no\.?)?|txn\s?id|utr)[:\s#-]*([A-Za-z0-9]{6,20})/i;
+export const BALANCE_PATTERN = new RegExp(
+  `(?:avl(?:ailable)?\\s?bal(?:ance)?|bal)[:\\s]*${AMOUNT}`,
+  'i',
+);
+export const REFERENCE_PATTERN =
+  /(?:ref(?:erence)?(?:\s?no\.?)?|txn\s?id|utr)[:\s#-]*([A-Za-z0-9]{6,20})/i;
 export const ACCOUNT_PATTERN = new RegExp(ACCOUNT_TAIL, 'i');
 
 export const UPI_PATTERN = /\bupi\b/i;
 export const ATM_PATTERN = /\batm\b|cash\s?withdrawal/i;
-export const BALANCE_QUERY_PATTERN = /available balance is|your balance is|bal(?:ance)? enquiry/i;
+export const BALANCE_QUERY_PATTERN =
+  /available balance is|your balance is|bal(?:ance)? enquiry/i;
 
 // Merchant / payee extraction: text after "to"/"at"/"for" up to punctuation,
 // or the UPI VPA / payee name pattern banks commonly use.

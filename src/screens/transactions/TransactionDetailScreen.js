@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, {useState, useEffect, useCallback} from 'react';
 import {
   View,
   Text,
@@ -7,26 +7,30 @@ import {
   StyleSheet,
   ActivityIndicator,
 } from 'react-native';
-import { useTheme, IconButton } from 'react-native-paper';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import {useTheme, IconButton} from 'react-native-paper';
+import {SafeAreaView} from 'react-native-safe-area-context';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import { useNavigation, useRoute } from '@react-navigation/native';
+import {useNavigation, useRoute} from '@react-navigation/native';
 
-import { useApp } from '../../store/AppContext';
-import { getTransactionById } from '../../database/transactions';
-import { CATEGORIES, getCategoryById } from '../../data/categories';
-import { getBankById } from '../../data/banks';
-import { formatCurrency, formatDateTime } from '../../utils/formatters';
-import { AmountText, Card, Button } from '../../components/common';
-import { ConfirmDialog, SuccessDialog, BottomSheet } from '../../components/dialogs';
+import {useApp} from '../../store/AppContext';
+import {getTransactionById} from '../../database/transactions';
+import {CATEGORIES, getCategoryById} from '../../data/categories';
+import {getBankById} from '../../data/banks';
+import {formatCurrency, formatDateTime} from '../../utils/formatters';
+import {AmountText, Card, Button} from '../../components/common';
+import {
+  ConfirmDialog,
+  SuccessDialog,
+  BottomSheet,
+} from '../../components/dialogs';
 
 export default function TransactionDetailScreen() {
   const theme = useTheme();
   const navigation = useNavigation();
   const route = useRoute();
-  const { id } = route.params;
+  const {id} = route.params;
 
-  const { transactions, updateTransactionCategory, removeTransaction } = useApp();
+  const {transactions, updateTransactionCategory, removeTransaction} = useApp();
 
   const [transaction, setTransaction] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -78,9 +82,8 @@ export default function TransactionDetailScreen() {
   if (loading) {
     return (
       <SafeAreaView
-        style={[styles.safe, { backgroundColor: theme.colors.background }]}
-        edges={['top']}
-      >
+        style={[styles.safe, {backgroundColor: theme.colors.background}]}
+        edges={['top']}>
         <View style={styles.loadingContainer}>
           <ActivityIndicator size="large" color={theme.colors.primary} />
         </View>
@@ -91,9 +94,8 @@ export default function TransactionDetailScreen() {
   if (!transaction) {
     return (
       <SafeAreaView
-        style={[styles.safe, { backgroundColor: theme.colors.background }]}
-        edges={['top']}
-      >
+        style={[styles.safe, {backgroundColor: theme.colors.background}]}
+        edges={['top']}>
         <View style={styles.headerRow}>
           <IconButton
             icon="arrow-left"
@@ -101,13 +103,15 @@ export default function TransactionDetailScreen() {
             iconColor={theme.colors.textPrimary}
             onPress={() => navigation.goBack()}
           />
-          <Text style={[styles.headerTitle, { color: theme.colors.textPrimary }]}>
+          <Text style={[styles.headerTitle, {color: theme.colors.textPrimary}]}>
             Transaction Details
           </Text>
           <View style={styles.headerSpacer} />
         </View>
         <View style={styles.loadingContainer}>
-          <Text style={{ color: theme.colors.textSecondary }}>Transaction not found.</Text>
+          <Text style={{color: theme.colors.textSecondary}}>
+            Transaction not found.
+          </Text>
         </View>
       </SafeAreaView>
     );
@@ -119,21 +123,19 @@ export default function TransactionDetailScreen() {
   const amountColor = isCredit ? theme.colors.income : theme.colors.expense;
 
   const detailRows = [
-    { label: 'Bank', value: bank ? bank.name : transaction.bank || '—' },
+    {label: 'Bank', value: bank ? bank.name : transaction.bank || '—'},
     {
       label: 'Account',
       value: transaction.accountLast4 ? `•• ${transaction.accountLast4}` : '—',
     },
-    { label: 'Date & Time', value: formatDateTime(transaction.timestamp) },
-    { label: 'Reference No', value: transaction.referenceNo || '—' },
+    {label: 'Date & Time', value: formatDateTime(transaction.timestamp)},
+    {label: 'Reference No', value: transaction.referenceNo || '—'},
     {
       label: 'Balance After',
       value:
-        transaction.balance != null
-          ? formatCurrency(transaction.balance)
-          : '—',
+        transaction.balance != null ? formatCurrency(transaction.balance) : '—',
     },
-    { label: 'Type', value: isCredit ? 'Credit' : 'Debit' },
+    {label: 'Type', value: isCredit ? 'Credit' : 'Debit'},
     {
       label: 'Source',
       value: transaction.rawSms
@@ -144,17 +146,17 @@ export default function TransactionDetailScreen() {
 
   return (
     <SafeAreaView
-      style={[styles.safe, { backgroundColor: theme.colors.background }]}
-      edges={['top']}
-    >
-      <View style={[styles.headerRow, { backgroundColor: theme.colors.background }]}>
+      style={[styles.safe, {backgroundColor: theme.colors.background}]}
+      edges={['top']}>
+      <View
+        style={[styles.headerRow, {backgroundColor: theme.colors.background}]}>
         <IconButton
           icon="arrow-left"
           size={24}
           iconColor={theme.colors.textPrimary}
           onPress={() => navigation.goBack()}
         />
-        <Text style={[styles.headerTitle, { color: theme.colors.textPrimary }]}>
+        <Text style={[styles.headerTitle, {color: theme.colors.textPrimary}]}>
           Transaction Details
         </Text>
         <View style={styles.headerSpacer} />
@@ -162,16 +164,17 @@ export default function TransactionDetailScreen() {
 
       <ScrollView
         contentContainerStyle={styles.scrollContent}
-        showsVerticalScrollIndicator={false}
-      >
+        showsVerticalScrollIndicator={false}>
         {/* Category icon circle */}
         <View style={styles.iconSection}>
           <View
             style={[
               styles.categoryCircle,
-              { backgroundColor: category.color + '22', borderColor: category.color + '55' },
-            ]}
-          >
+              {
+                backgroundColor: category.color + '22',
+                borderColor: category.color + '55',
+              },
+            ]}>
             <Icon name={category.icon} size={48} color={category.color} />
           </View>
 
@@ -180,11 +183,11 @@ export default function TransactionDetailScreen() {
             amount={transaction.amount}
             type={transaction.type}
             size={34}
-            style={[styles.amount, { color: amountColor }]}
+            style={[styles.amount, {color: amountColor}]}
           />
 
           {/* Merchant */}
-          <Text style={[styles.merchant, { color: theme.colors.textPrimary }]}>
+          <Text style={[styles.merchant, {color: theme.colors.textPrimary}]}>
             {transaction.merchant || transaction.description || 'Transaction'}
           </Text>
 
@@ -192,8 +195,10 @@ export default function TransactionDetailScreen() {
           {transaction.description &&
             transaction.description !== transaction.merchant && (
               <Text
-                style={[styles.description, { color: theme.colors.textSecondary }]}
-              >
+                style={[
+                  styles.description,
+                  {color: theme.colors.textSecondary},
+                ]}>
                 {transaction.description}
               </Text>
             )}
@@ -204,36 +209,49 @@ export default function TransactionDetailScreen() {
           <View
             style={[
               styles.categoryBadge,
-              { backgroundColor: category.color + '18', borderColor: category.color + '44' },
-            ]}
-          >
-            <View style={[styles.categoryDot, { backgroundColor: category.color }]} />
-            <Text style={[styles.categoryBadgeText, { color: category.color }]}>
+              {
+                backgroundColor: category.color + '18',
+                borderColor: category.color + '44',
+              },
+            ]}>
+            <View
+              style={[styles.categoryDot, {backgroundColor: category.color}]}
+            />
+            <Text style={[styles.categoryBadgeText, {color: category.color}]}>
               {category.emoji} {category.name}
             </Text>
           </View>
         </View>
 
         {/* Details card */}
-        <Card style={[styles.detailsCard, { borderColor: theme.colors.border }]} elevation={2}>
+        <Card
+          style={[styles.detailsCard, {borderColor: theme.colors.border}]}
+          elevation={2}>
           {detailRows.map((row, index) => (
             <View key={row.label}>
               <View style={styles.detailRow}>
                 <Text
-                  style={[styles.detailLabel, { color: theme.colors.textSecondary }]}
-                >
+                  style={[
+                    styles.detailLabel,
+                    {color: theme.colors.textSecondary},
+                  ]}>
                   {row.label}
                 </Text>
                 <Text
-                  style={[styles.detailValue, { color: theme.colors.textPrimary }]}
-                  numberOfLines={2}
-                >
+                  style={[
+                    styles.detailValue,
+                    {color: theme.colors.textPrimary},
+                  ]}
+                  numberOfLines={2}>
                   {row.value}
                 </Text>
               </View>
               {index < detailRows.length - 1 && (
                 <View
-                  style={[styles.rowDivider, { backgroundColor: theme.colors.border }]}
+                  style={[
+                    styles.rowDivider,
+                    {backgroundColor: theme.colors.border},
+                  ]}
                 />
               )}
             </View>
@@ -243,15 +261,21 @@ export default function TransactionDetailScreen() {
         {/* Raw SMS card */}
         {transaction.rawSms ? (
           <Card style={styles.smsCard} elevation={1}>
-            <Text style={[styles.smsSectionTitle, { color: theme.colors.textSecondary }]}>
+            <Text
+              style={[
+                styles.smsSectionTitle,
+                {color: theme.colors.textSecondary},
+              ]}>
               Original Message
             </Text>
             <Text
               style={[
                 styles.smsText,
-                { color: theme.colors.textPrimary, backgroundColor: theme.colors.background },
-              ]}
-            >
+                {
+                  color: theme.colors.textPrimary,
+                  backgroundColor: theme.colors.background,
+                },
+              ]}>
               {transaction.rawSms}
             </Text>
           </Card>
@@ -281,8 +305,7 @@ export default function TransactionDetailScreen() {
       <BottomSheet
         visible={categorySheetVisible}
         onClose={() => setCategorySheetVisible(false)}
-        title="Select Category"
-      >
+        title="Select Category">
         <View style={styles.categoryList}>
           {CATEGORIES.map(cat => (
             <TouchableOpacity
@@ -295,20 +318,28 @@ export default function TransactionDetailScreen() {
               ]}
               onPress={() => handleCategorySelect(cat.id)}
               activeOpacity={0.7}
-              disabled={actionLoading}
-            >
+              disabled={actionLoading}>
               <View
-                style={[styles.catIconBadge, { backgroundColor: cat.color + '22' }]}
-              >
+                style={[
+                  styles.catIconBadge,
+                  {backgroundColor: cat.color + '22'},
+                ]}>
                 <Icon name={cat.icon} size={22} color={cat.color} />
               </View>
               <Text
-                style={[styles.categoryRowText, { color: theme.colors.textPrimary }]}
-              >
+                style={[
+                  styles.categoryRowText,
+                  {color: theme.colors.textPrimary},
+                ]}>
                 {cat.emoji} {cat.name}
               </Text>
               {cat.id === transaction.category && (
-                <Icon name="check" size={20} color={cat.color} style={styles.checkIcon} />
+                <Icon
+                  name="check"
+                  size={20}
+                  color={cat.color}
+                  style={styles.checkIcon}
+                />
               )}
             </TouchableOpacity>
           ))}

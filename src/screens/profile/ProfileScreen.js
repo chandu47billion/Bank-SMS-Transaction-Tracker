@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useCallback } from 'react';
+import React, {useState, useMemo, useCallback} from 'react';
 import {
   View,
   StyleSheet,
@@ -6,18 +6,29 @@ import {
   TouchableOpacity,
   ActivityIndicator,
 } from 'react-native';
-import { useTheme, Switch, List, Divider, TextInput, Text } from 'react-native-paper';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import {
+  useTheme,
+  Switch,
+  List,
+  Divider,
+  TextInput,
+  Text,
+} from 'react-native-paper';
+import {SafeAreaView} from 'react-native-safe-area-context';
 import LinearGradient from 'react-native-linear-gradient';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import { useNavigation } from '@react-navigation/native';
+import {useNavigation} from '@react-navigation/native';
 
-import { useApp } from '../../store/AppContext';
-import { gradients } from '../../theme/colors';
-import { formatCurrency } from '../../utils/formatters';
-import { getCurrentMonthRange, summarizeTransactions } from '../../utils/helpers';
-import { Avatar, Button, Card } from '../../components/common';
-import { BottomSheet, SuccessDialog, ConfirmDialog } from '../../components/dialogs';
+import {useApp} from '../../store/AppContext';
+import {gradients} from '../../theme/colors';
+import {formatCurrency} from '../../utils/formatters';
+import {getCurrentMonthRange, summarizeTransactions} from '../../utils/helpers';
+import {Avatar, Button, Card} from '../../components/common';
+import {
+  BottomSheet,
+  SuccessDialog,
+  ConfirmDialog,
+} from '../../components/dialogs';
 
 export default function ProfileScreen() {
   const theme = useTheme();
@@ -54,11 +65,16 @@ export default function ProfileScreen() {
   const monthlyTxns = useMemo(
     () =>
       transactions.filter(
-        t => t.timestamp >= monthRange.startISO && t.timestamp <= monthRange.endISO,
+        t =>
+          t.timestamp >= monthRange.startISO &&
+          t.timestamp <= monthRange.endISO,
       ),
     [transactions, monthRange],
   );
-  const summary = useMemo(() => summarizeTransactions(monthlyTxns), [monthlyTxns]);
+  const summary = useMemo(
+    () => summarizeTransactions(monthlyTxns),
+    [monthlyTxns],
+  );
 
   const styles = makeStyles(theme);
 
@@ -77,9 +93,12 @@ export default function ProfileScreen() {
   const handleSaveProfile = useCallback(async () => {
     setSavingProfile(true);
     try {
-      await updateProfile({ name: editName.trim(), email: editEmail.trim() });
+      await updateProfile({name: editName.trim(), email: editEmail.trim()});
       setEditSheetVisible(false);
-      showSuccess('Profile Updated', 'Your profile has been saved successfully.');
+      showSuccess(
+        'Profile Updated',
+        'Your profile has been saved successfully.',
+      );
     } finally {
       setSavingProfile(false);
     }
@@ -89,7 +108,10 @@ export default function ProfileScreen() {
     setSyncLoading(true);
     try {
       await requestAndSyncSms();
-      showSuccess('Sync Complete', 'Your SMS transactions have been synced successfully.');
+      showSuccess(
+        'Sync Complete',
+        'Your SMS transactions have been synced successfully.',
+      );
     } finally {
       setSyncLoading(false);
     }
@@ -98,7 +120,17 @@ export default function ProfileScreen() {
   const handleExportCSV = useCallback(() => {
     setExportLoading(true);
     setTimeout(() => {
-      const headers = ['Date', 'Time', 'Type', 'Bank', 'Merchant', 'Description', 'Category', 'Amount', 'Balance'];
+      const headers = [
+        'Date',
+        'Time',
+        'Type',
+        'Bank',
+        'Merchant',
+        'Description',
+        'Category',
+        'Amount',
+        'Balance',
+      ];
       const rows = transactions.map(t => [
         t.timestamp ? t.timestamp.slice(0, 10) : '',
         t.timestamp ? t.timestamp.slice(11, 19) : '',
@@ -129,18 +161,36 @@ export default function ProfileScreen() {
   }, [showSuccess]);
 
   const statColumns = [
-    { label: 'Transactions', value: String(summary.count), icon: 'swap-horizontal' },
-    { label: 'Spent', value: formatCurrency(summary.debit, { compact: true }), icon: 'arrow-up-circle' },
-    { label: 'Received', value: formatCurrency(summary.credit, { compact: true }), icon: 'arrow-down-circle' },
+    {
+      label: 'Transactions',
+      value: String(summary.count),
+      icon: 'swap-horizontal',
+    },
+    {
+      label: 'Spent',
+      value: formatCurrency(summary.debit, {compact: true}),
+      icon: 'arrow-up-circle',
+    },
+    {
+      label: 'Received',
+      value: formatCurrency(summary.credit, {compact: true}),
+      icon: 'arrow-down-circle',
+    },
   ];
 
   return (
-    <SafeAreaView style={[styles.container, { backgroundColor: theme.colors.background }]} edges={['top']}>
+    <SafeAreaView
+      style={[styles.container, {backgroundColor: theme.colors.background}]}
+      edges={['top']}>
       <ScrollView showsVerticalScrollIndicator={false}>
         {/* Hero gradient */}
         <LinearGradient colors={gradients.header} style={styles.hero}>
           <View style={styles.avatarRow}>
-            <Avatar name={userName} size={80} backgroundColor="rgba(255,255,255,0.25)" />
+            <Avatar
+              name={userName}
+              size={80}
+              backgroundColor="rgba(255,255,255,0.25)"
+            />
             <TouchableOpacity style={styles.editBtn} onPress={openEditSheet}>
               <Icon name="pencil-outline" size={18} color="#fff" />
               <Text style={styles.editBtnText}>Edit</Text>
@@ -153,7 +203,11 @@ export default function ProfileScreen() {
         {/* This month summary card */}
         <View style={styles.summaryWrapper}>
           <Card style={styles.summaryCard} elevation={4}>
-            <Text style={[styles.summaryTitle, { color: theme.colors.textSecondary }]}>
+            <Text
+              style={[
+                styles.summaryTitle,
+                {color: theme.colors.textSecondary},
+              ]}>
               This Month
             </Text>
             <View style={styles.statRow}>
@@ -171,15 +225,28 @@ export default function ProfileScreen() {
                           : theme.colors.income
                       }
                     />
-                    <Text style={[styles.statValue, { color: theme.colors.textPrimary }]}>
+                    <Text
+                      style={[
+                        styles.statValue,
+                        {color: theme.colors.textPrimary},
+                      ]}>
                       {col.value}
                     </Text>
-                    <Text style={[styles.statLabel, { color: theme.colors.textSecondary }]}>
+                    <Text
+                      style={[
+                        styles.statLabel,
+                        {color: theme.colors.textSecondary},
+                      ]}>
                       {col.label}
                     </Text>
                   </View>
                   {i < statColumns.length - 1 && (
-                    <View style={[styles.statDivider, { backgroundColor: theme.colors.border }]} />
+                    <View
+                      style={[
+                        styles.statDivider,
+                        {backgroundColor: theme.colors.border},
+                      ]}
+                    />
                   )}
                 </React.Fragment>
               ))}
@@ -188,31 +255,52 @@ export default function ProfileScreen() {
         </View>
 
         {/* Preferences */}
-        <List.Section title="Preferences" titleStyle={[styles.sectionTitle, { color: theme.colors.textSecondary }]}>
-          <View style={[styles.sectionCard, { backgroundColor: theme.colors.surface }]}>
+        <List.Section
+          title="Preferences"
+          titleStyle={[
+            styles.sectionTitle,
+            {color: theme.colors.textSecondary},
+          ]}>
+          <View
+            style={[
+              styles.sectionCard,
+              {backgroundColor: theme.colors.surface},
+            ]}>
             <List.Item
               title="Dark Mode"
-              titleStyle={{ color: theme.colors.textPrimary }}
+              titleStyle={{color: theme.colors.textPrimary}}
               description="Switch between light and dark theme"
-              descriptionStyle={{ color: theme.colors.textSecondary }}
+              descriptionStyle={{color: theme.colors.textSecondary}}
               left={() => (
                 <View style={styles.iconWrap}>
-                  <Icon name="theme-light-dark" size={22} color={theme.colors.primary} />
+                  <Icon
+                    name="theme-light-dark"
+                    size={22}
+                    color={theme.colors.primary}
+                  />
                 </View>
               )}
               right={() => (
-                <Switch value={isDarkMode} onValueChange={toggleDarkMode} color={theme.colors.primary} />
+                <Switch
+                  value={isDarkMode}
+                  onValueChange={toggleDarkMode}
+                  color={theme.colors.primary}
+                />
               )}
             />
-            <Divider style={{ backgroundColor: theme.colors.border }} />
+            <Divider style={{backgroundColor: theme.colors.border}} />
             <List.Item
               title="Notifications"
-              titleStyle={{ color: theme.colors.textPrimary }}
+              titleStyle={{color: theme.colors.textPrimary}}
               description="Receive transaction alerts"
-              descriptionStyle={{ color: theme.colors.textSecondary }}
+              descriptionStyle={{color: theme.colors.textSecondary}}
               left={() => (
                 <View style={styles.iconWrap}>
-                  <Icon name="bell-outline" size={22} color={theme.colors.primary} />
+                  <Icon
+                    name="bell-outline"
+                    size={22}
+                    color={theme.colors.primary}
+                  />
                 </View>
               )}
               right={() => (
@@ -223,12 +311,12 @@ export default function ProfileScreen() {
                 />
               )}
             />
-            <Divider style={{ backgroundColor: theme.colors.border }} />
+            <Divider style={{backgroundColor: theme.colors.border}} />
             <List.Item
               title="Sync SMS Now"
-              titleStyle={{ color: theme.colors.textPrimary }}
+              titleStyle={{color: theme.colors.textPrimary}}
               description="Re-scan inbox for new transactions"
-              descriptionStyle={{ color: theme.colors.textSecondary }}
+              descriptionStyle={{color: theme.colors.textSecondary}}
               left={() => (
                 <View style={styles.iconWrap}>
                   <Icon name="sync" size={22} color={theme.colors.primary} />
@@ -236,9 +324,17 @@ export default function ProfileScreen() {
               )}
               right={() =>
                 syncLoading ? (
-                  <ActivityIndicator size="small" color={theme.colors.primary} style={{ marginRight: 8 }} />
+                  <ActivityIndicator
+                    size="small"
+                    color={theme.colors.primary}
+                    style={{marginRight: 8}}
+                  />
                 ) : (
-                  <Icon name="chevron-right" size={22} color={theme.colors.textSecondary} />
+                  <Icon
+                    name="chevron-right"
+                    size={22}
+                    color={theme.colors.textSecondary}
+                  />
                 )
               }
               onPress={handleSyncSms}
@@ -248,18 +344,37 @@ export default function ProfileScreen() {
         </List.Section>
 
         {/* Security */}
-        <List.Section title="Security" titleStyle={[styles.sectionTitle, { color: theme.colors.textSecondary }]}>
-          <View style={[styles.sectionCard, { backgroundColor: theme.colors.surface }]}>
+        <List.Section
+          title="Security"
+          titleStyle={[
+            styles.sectionTitle,
+            {color: theme.colors.textSecondary},
+          ]}>
+          <View
+            style={[
+              styles.sectionCard,
+              {backgroundColor: theme.colors.surface},
+            ]}>
             <List.Item
               title="App Lock"
-              titleStyle={{ color: theme.colors.textPrimary }}
-              description={appLockEnabled ? 'App lock enabled (demo)' : 'Lock app with PIN or biometrics'}
+              titleStyle={{color: theme.colors.textPrimary}}
+              description={
+                appLockEnabled
+                  ? 'App lock enabled (demo)'
+                  : 'Lock app with PIN or biometrics'
+              }
               descriptionStyle={{
-                color: appLockEnabled ? theme.colors.income : theme.colors.textSecondary,
+                color: appLockEnabled
+                  ? theme.colors.income
+                  : theme.colors.textSecondary,
               }}
               left={() => (
                 <View style={styles.iconWrap}>
-                  <Icon name="lock-outline" size={22} color={theme.colors.primary} />
+                  <Icon
+                    name="lock-outline"
+                    size={22}
+                    color={theme.colors.primary}
+                  />
                 </View>
               )}
               right={() => (
@@ -274,62 +389,103 @@ export default function ProfileScreen() {
         </List.Section>
 
         {/* Data */}
-        <List.Section title="Data" titleStyle={[styles.sectionTitle, { color: theme.colors.textSecondary }]}>
-          <View style={[styles.sectionCard, { backgroundColor: theme.colors.surface }]}>
+        <List.Section
+          title="Data"
+          titleStyle={[
+            styles.sectionTitle,
+            {color: theme.colors.textSecondary},
+          ]}>
+          <View
+            style={[
+              styles.sectionCard,
+              {backgroundColor: theme.colors.surface},
+            ]}>
             <List.Item
               title="Export Data (CSV)"
-              titleStyle={{ color: theme.colors.textPrimary }}
+              titleStyle={{color: theme.colors.textPrimary}}
               description="Download all transactions as CSV"
-              descriptionStyle={{ color: theme.colors.textSecondary }}
+              descriptionStyle={{color: theme.colors.textSecondary}}
               left={() => (
                 <View style={styles.iconWrap}>
-                  <Icon name="file-export-outline" size={22} color={theme.colors.primary} />
+                  <Icon
+                    name="file-export-outline"
+                    size={22}
+                    color={theme.colors.primary}
+                  />
                 </View>
               )}
               right={() =>
                 exportLoading ? (
-                  <ActivityIndicator size="small" color={theme.colors.primary} style={{ marginRight: 8 }} />
+                  <ActivityIndicator
+                    size="small"
+                    color={theme.colors.primary}
+                    style={{marginRight: 8}}
+                  />
                 ) : (
-                  <Icon name="chevron-right" size={22} color={theme.colors.textSecondary} />
+                  <Icon
+                    name="chevron-right"
+                    size={22}
+                    color={theme.colors.textSecondary}
+                  />
                 )
               }
               onPress={handleExportCSV}
               disabled={exportLoading}
             />
-            <Divider style={{ backgroundColor: theme.colors.border }} />
+            <Divider style={{backgroundColor: theme.colors.border}} />
             <List.Item
               title="Backup Data"
-              titleStyle={{ color: theme.colors.textPrimary }}
+              titleStyle={{color: theme.colors.textPrimary}}
               description="Save a backup of your data"
-              descriptionStyle={{ color: theme.colors.textSecondary }}
+              descriptionStyle={{color: theme.colors.textSecondary}}
               left={() => (
                 <View style={styles.iconWrap}>
-                  <Icon name="cloud-upload-outline" size={22} color={theme.colors.primary} />
+                  <Icon
+                    name="cloud-upload-outline"
+                    size={22}
+                    color={theme.colors.primary}
+                  />
                 </View>
               )}
               right={() =>
                 backupLoading ? (
-                  <ActivityIndicator size="small" color={theme.colors.primary} style={{ marginRight: 8 }} />
+                  <ActivityIndicator
+                    size="small"
+                    color={theme.colors.primary}
+                    style={{marginRight: 8}}
+                  />
                 ) : (
-                  <Icon name="chevron-right" size={22} color={theme.colors.textSecondary} />
+                  <Icon
+                    name="chevron-right"
+                    size={22}
+                    color={theme.colors.textSecondary}
+                  />
                 )
               }
               onPress={handleBackup}
               disabled={backupLoading}
             />
-            <Divider style={{ backgroundColor: theme.colors.border }} />
+            <Divider style={{backgroundColor: theme.colors.border}} />
             <List.Item
               title="Linked Banks"
-              titleStyle={{ color: theme.colors.textPrimary }}
+              titleStyle={{color: theme.colors.textPrimary}}
               description="Manage your connected bank accounts"
-              descriptionStyle={{ color: theme.colors.textSecondary }}
+              descriptionStyle={{color: theme.colors.textSecondary}}
               left={() => (
                 <View style={styles.iconWrap}>
-                  <Icon name="bank-outline" size={22} color={theme.colors.primary} />
+                  <Icon
+                    name="bank-outline"
+                    size={22}
+                    color={theme.colors.primary}
+                  />
                 </View>
               )}
               right={() => (
-                <Icon name="chevron-right" size={22} color={theme.colors.textSecondary} />
+                <Icon
+                  name="chevron-right"
+                  size={22}
+                  color={theme.colors.textSecondary}
+                />
               )}
               onPress={() => navigation.navigate('Banks')}
             />
@@ -337,53 +493,89 @@ export default function ProfileScreen() {
         </List.Section>
 
         {/* About */}
-        <List.Section title="About" titleStyle={[styles.sectionTitle, { color: theme.colors.textSecondary }]}>
-          <View style={[styles.sectionCard, { backgroundColor: theme.colors.surface }]}>
+        <List.Section
+          title="About"
+          titleStyle={[
+            styles.sectionTitle,
+            {color: theme.colors.textSecondary},
+          ]}>
+          <View
+            style={[
+              styles.sectionCard,
+              {backgroundColor: theme.colors.surface},
+            ]}>
             <List.Item
               title="Go Premium"
-              titleStyle={{ color: theme.colors.textPrimary }}
+              titleStyle={{color: theme.colors.textPrimary}}
               description="Unlock advanced features & insights"
-              descriptionStyle={{ color: theme.colors.textSecondary }}
+              descriptionStyle={{color: theme.colors.textSecondary}}
               left={() => (
                 <View style={styles.iconWrap}>
-                  <Icon name="crown-outline" size={22} color={theme.colors.gold} />
+                  <Icon
+                    name="crown-outline"
+                    size={22}
+                    color={theme.colors.gold}
+                  />
                 </View>
               )}
               right={() => (
-                <Icon name="chevron-right" size={22} color={theme.colors.textSecondary} />
+                <Icon
+                  name="chevron-right"
+                  size={22}
+                  color={theme.colors.textSecondary}
+                />
               )}
               onPress={() => navigation.navigate('Premium')}
             />
-            <Divider style={{ backgroundColor: theme.colors.border }} />
+            <Divider style={{backgroundColor: theme.colors.border}} />
             <List.Item
               title="App Version"
-              titleStyle={{ color: theme.colors.textPrimary }}
+              titleStyle={{color: theme.colors.textPrimary}}
               description="MoneyFlow v1.0.0"
-              descriptionStyle={{ color: theme.colors.textSecondary }}
+              descriptionStyle={{color: theme.colors.textSecondary}}
               left={() => (
                 <View style={styles.iconWrap}>
-                  <Icon name="information-outline" size={22} color={theme.colors.primary} />
+                  <Icon
+                    name="information-outline"
+                    size={22}
+                    color={theme.colors.primary}
+                  />
                 </View>
               )}
               right={() => (
-                <Text style={[styles.versionBadge, { color: theme.colors.textSecondary, borderColor: theme.colors.border }]}>
+                <Text
+                  style={[
+                    styles.versionBadge,
+                    {
+                      color: theme.colors.textSecondary,
+                      borderColor: theme.colors.border,
+                    },
+                  ]}>
                   1.0.0
                 </Text>
               )}
             />
-            <Divider style={{ backgroundColor: theme.colors.border }} />
+            <Divider style={{backgroundColor: theme.colors.border}} />
             <List.Item
               title="About MoneyFlow"
-              titleStyle={{ color: theme.colors.textPrimary }}
+              titleStyle={{color: theme.colors.textPrimary}}
               description="Learn more about this app"
-              descriptionStyle={{ color: theme.colors.textSecondary }}
+              descriptionStyle={{color: theme.colors.textSecondary}}
               left={() => (
                 <View style={styles.iconWrap}>
-                  <Icon name="help-circle-outline" size={22} color={theme.colors.primary} />
+                  <Icon
+                    name="help-circle-outline"
+                    size={22}
+                    color={theme.colors.primary}
+                  />
                 </View>
               )}
               right={() => (
-                <Icon name="chevron-right" size={22} color={theme.colors.textSecondary} />
+                <Icon
+                  name="chevron-right"
+                  size={22}
+                  color={theme.colors.textSecondary}
+                />
               )}
               onPress={() => setAboutVisible(true)}
             />
@@ -397,8 +589,7 @@ export default function ProfileScreen() {
       <BottomSheet
         visible={editSheetVisible}
         onClose={() => setEditSheetVisible(false)}
-        title="Edit Profile"
-      >
+        title="Edit Profile">
         <TextInput
           label="Full Name"
           value={editName}

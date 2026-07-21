@@ -1,6 +1,6 @@
 import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
-import { useTheme } from 'react-native-paper';
+import {View, Text, StyleSheet} from 'react-native';
+import {useTheme} from 'react-native-paper';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import Button from './Button';
 
@@ -18,20 +18,19 @@ export default function EmptyState({
       <View
         style={[
           styles.iconCircle,
-          { backgroundColor: theme.colors.surfaceVariant },
-        ]}
-      >
+          {backgroundColor: theme.colors.surfaceVariant},
+        ]}>
         <Icon name={icon} size={48} color={theme.colors.textSecondary} />
       </View>
 
       {title ? (
-        <Text style={[styles.title, { color: theme.colors.textPrimary }]}>
+        <Text style={[styles.title, {color: theme.colors.textPrimary}]}>
           {title}
         </Text>
       ) : null}
 
       {message ? (
-        <Text style={[styles.message, { color: theme.colors.textSecondary }]}>
+        <Text style={[styles.message, {color: theme.colors.textSecondary}]}>
           {message}
         </Text>
       ) : null}

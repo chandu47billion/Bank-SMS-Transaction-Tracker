@@ -12,8 +12,8 @@ import {
   CREATE_SETTINGS_TABLE,
   CREATE_INDEXES,
 } from './schema';
-import { CATEGORIES } from '../data/categories';
-import { generateSeedTransactions } from '../data/seed';
+import {CATEGORIES} from '../data/categories';
+import {generateSeedTransactions} from '../data/seed';
 
 SQLite.enablePromise(true);
 SQLite.DEBUG(false);
@@ -24,7 +24,9 @@ const SEED_FLAG_KEY = 'seed_completed';
 let dbInstance = null;
 
 export async function getDBConnection() {
-  if (dbInstance) return dbInstance;
+  if (dbInstance) {
+    return dbInstance;
+  }
   dbInstance = await SQLite.openDatabase({
     name: DATABASE_NAME,
     location: 'default',
@@ -47,9 +49,14 @@ async function runMigrations(db) {
 }
 
 async function seedCategoriesIfEmpty(db) {
-  const [result] = await execute(db, 'SELECT COUNT(*) as count FROM categories');
+  const [result] = await execute(
+    db,
+    'SELECT COUNT(*) as count FROM categories',
+  );
   const count = result.rows.item(0).count;
-  if (count > 0) return;
+  if (count > 0) {
+    return;
+  }
 
   for (const cat of CATEGORIES) {
     await execute(
@@ -61,20 +68,35 @@ async function seedCategoriesIfEmpty(db) {
 }
 
 async function getSetting(db, key) {
-  const [result] = await execute(db, 'SELECT value FROM settings WHERE key = ?', [key]);
-  if (result.rows.length === 0) return null;
+  const [result] = await execute(
+    db,
+    'SELECT value FROM settings WHERE key = ?',
+    [key],
+  );
+  if (result.rows.length === 0) {
+    return null;
+  }
   return result.rows.item(0).value;
 }
 
 async function setSetting(db, key, value) {
-  await execute(db, 'INSERT OR REPLACE INTO settings (key, value) VALUES (?, ?)', [key, String(value)]);
+  await execute(
+    db,
+    'INSERT OR REPLACE INTO settings (key, value) VALUES (?, ?)',
+    [key, String(value)],
+  );
 }
 
 async function seedTransactionsIfNeeded(db) {
   const seeded = await getSetting(db, SEED_FLAG_KEY);
-  if (seeded === 'true') return;
+  if (seeded === 'true') {
+    return;
+  }
 
-  const [result] = await execute(db, 'SELECT COUNT(*) as count FROM transactions');
+  const [result] = await execute(
+    db,
+    'SELECT COUNT(*) as count FROM transactions',
+  );
   const count = result.rows.item(0).count;
   if (count === 0) {
     const seedData = generateSeedTransactions();
@@ -124,4 +146,4 @@ export async function closeDatabase() {
   }
 }
 
-export default { getDBConnection, initDatabase, closeDatabase };
+export default {getDBConnection, initDatabase, closeDatabase};

@@ -1,19 +1,14 @@
-import React, { useState, useCallback } from 'react';
-import {
-  View,
-  StyleSheet,
-  ScrollView,
-  TouchableOpacity,
-} from 'react-native';
-import { useTheme, Text } from 'react-native-paper';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import React, {useState, useCallback} from 'react';
+import {View, StyleSheet, ScrollView, TouchableOpacity} from 'react-native';
+import {useTheme, Text} from 'react-native-paper';
+import {SafeAreaView} from 'react-native-safe-area-context';
 import LinearGradient from 'react-native-linear-gradient';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import { useNavigation } from '@react-navigation/native';
+import {useNavigation} from '@react-navigation/native';
 
-import { gradients } from '../../theme/colors';
-import { Button, Card } from '../../components/common';
-import { SuccessDialog } from '../../components/dialogs';
+import {gradients} from '../../theme/colors';
+import {Button, Card} from '../../components/common';
+import {SuccessDialog} from '../../components/dialogs';
 
 const FEATURES = [
   {
@@ -55,8 +50,8 @@ const FEATURES = [
 ];
 
 const PRICING = {
-  monthly: { label: '₹99/month', short: '₹99/mo' },
-  annual: { label: '₹899/year (save 25%)', short: '₹899/yr' },
+  monthly: {label: '₹99/month', short: '₹99/mo'},
+  annual: {label: '₹899/year (save 25%)', short: '₹899/yr'},
 };
 
 export default function PremiumScreen() {
@@ -79,15 +74,24 @@ export default function PremiumScreen() {
   }, [navigation]);
 
   return (
-    <SafeAreaView style={[styles.container, { backgroundColor: theme.colors.background }]} edges={['top']}>
+    <SafeAreaView
+      style={[styles.container, {backgroundColor: theme.colors.background}]}
+      edges={['top']}>
       <ScrollView showsVerticalScrollIndicator={false}>
         {/* Hero */}
         <View style={styles.heroWrapper}>
           <LinearGradient colors={gradients.premium} style={styles.hero}>
-            <TouchableOpacity style={styles.backBtn} onPress={() => navigation.goBack()}>
+            <TouchableOpacity
+              style={styles.backBtn}
+              onPress={() => navigation.goBack()}>
               <Icon name="arrow-left" size={24} color="#fff" />
             </TouchableOpacity>
-            <Icon name="crown" size={64} color="#fff" style={styles.crownIcon} />
+            <Icon
+              name="crown"
+              size={64}
+              color="#fff"
+              style={styles.crownIcon}
+            />
             <Text style={styles.heroTitle}>MoneyFlow Premium</Text>
             <Text style={styles.heroSubtitle}>
               Unlock powerful insights & unlimited tracking
@@ -97,7 +101,14 @@ export default function PremiumScreen() {
 
         <View style={styles.content}>
           {/* Billing toggle */}
-          <View style={[styles.toggleRow, { backgroundColor: theme.colors.surface, borderColor: theme.colors.border }]}>
+          <View
+            style={[
+              styles.toggleRow,
+              {
+                backgroundColor: theme.colors.surface,
+                borderColor: theme.colors.border,
+              },
+            ]}>
             {['monthly', 'annual'].map(cycle => {
               const active = billingCycle === cycle;
               return (
@@ -105,17 +116,15 @@ export default function PremiumScreen() {
                   key={cycle}
                   style={[
                     styles.togglePill,
-                    active && { backgroundColor: theme.colors.gold },
+                    active && {backgroundColor: theme.colors.gold},
                   ]}
                   onPress={() => setBillingCycle(cycle)}
-                  activeOpacity={0.8}
-                >
+                  activeOpacity={0.8}>
                   <Text
                     style={[
                       styles.toggleText,
-                      { color: active ? '#fff' : theme.colors.textSecondary },
-                    ]}
-                  >
+                      {color: active ? '#fff' : theme.colors.textSecondary},
+                    ]}>
                     {cycle === 'monthly' ? 'Monthly' : 'Annual'}
                   </Text>
                   {cycle === 'annual' && (
@@ -130,9 +139,12 @@ export default function PremiumScreen() {
 
           {/* Price display */}
           <View style={styles.priceBlock}>
-            <Text style={[styles.priceText, { color: theme.colors.gold }]}>{price.label}</Text>
+            <Text style={[styles.priceText, {color: theme.colors.gold}]}>
+              {price.label}
+            </Text>
             {billingCycle === 'annual' && (
-              <Text style={[styles.priceSub, { color: theme.colors.textSecondary }]}>
+              <Text
+                style={[styles.priceSub, {color: theme.colors.textSecondary}]}>
                 Billed annually · only ₹74.9/month
               </Text>
             )}
@@ -140,7 +152,11 @@ export default function PremiumScreen() {
 
           {/* Features card */}
           <Card style={styles.featuresCard} elevation={3}>
-            <Text style={[styles.featuresHeader, { color: theme.colors.textPrimary }]}>
+            <Text
+              style={[
+                styles.featuresHeader,
+                {color: theme.colors.textPrimary},
+              ]}>
               Everything included
             </Text>
             {FEATURES.map((feature, index) => (
@@ -153,16 +169,29 @@ export default function PremiumScreen() {
                     style={styles.featureIcon}
                   />
                   <View style={styles.featureText}>
-                    <Text style={[styles.featureTitle, { color: theme.colors.textPrimary }]}>
+                    <Text
+                      style={[
+                        styles.featureTitle,
+                        {color: theme.colors.textPrimary},
+                      ]}>
                       {feature.title}
                     </Text>
-                    <Text style={[styles.featureDesc, { color: theme.colors.textSecondary }]}>
+                    <Text
+                      style={[
+                        styles.featureDesc,
+                        {color: theme.colors.textSecondary},
+                      ]}>
                       {feature.description}
                     </Text>
                   </View>
                 </View>
                 {index < FEATURES.length - 1 && (
-                  <View style={[styles.featureDivider, { backgroundColor: theme.colors.border }]} />
+                  <View
+                    style={[
+                      styles.featureDivider,
+                      {backgroundColor: theme.colors.border},
+                    ]}
+                  />
                 )}
               </View>
             ))}
@@ -178,7 +207,7 @@ export default function PremiumScreen() {
             style={styles.ctaBtn}
             icon="crown"
           />
-          <Text style={[styles.footnote, { color: theme.colors.textSecondary }]}>
+          <Text style={[styles.footnote, {color: theme.colors.textSecondary}]}>
             Cancel anytime. This is a demo — no real payment will be processed.
           </Text>
         </View>

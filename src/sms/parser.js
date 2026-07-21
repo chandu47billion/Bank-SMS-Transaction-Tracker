@@ -14,11 +14,13 @@ import {
   MERCHANT_PATTERNS,
   BALANCE_QUERY_PATTERN,
 } from './patterns';
-import { categorizeTransaction } from './categorizer';
-import { getBankByName } from '../data/banks';
+import {categorizeTransaction} from './categorizer';
+import {getBankByName} from '../data/banks';
 
 const parseAmount = str => {
-  if (!str) return null;
+  if (!str) {
+    return null;
+  }
   const cleaned = str.replace(/,/g, '');
   const value = parseFloat(cleaned);
   return Number.isNaN(value) ? null : value;
@@ -52,10 +54,14 @@ const extractMerchant = text => {
 const detectBankFromSender = (sender, text) => {
   if (sender) {
     const bank = getBankByName(sender);
-    if (bank && bank.id !== 'other') return bank.id;
+    if (bank && bank.id !== 'other') {
+      return bank.id;
+    }
   }
   for (const p of BANK_PATTERNS) {
-    if (p.test.test(text)) return p.bank;
+    if (p.test.test(text)) {
+      return p.bank;
+    }
   }
   return 'other';
 };
@@ -66,12 +72,18 @@ const detectBankFromSender = (sender, text) => {
  * @returns {object|null} normalized transaction or null if not a transaction SMS
  */
 export function parseSms(sms) {
-  const { body, sender, timestamp } = sms;
-  if (!body || typeof body !== 'string') return null;
+  const {body, sender, timestamp} = sms;
+  if (!body || typeof body !== 'string') {
+    return null;
+  }
   const text = body.trim();
 
   // Skip pure balance-enquiry messages (no debit/credit action)
-  if (BALANCE_QUERY_PATTERN.test(text) && !GENERIC_DEBIT.test(text) && !GENERIC_CREDIT.test(text)) {
+  if (
+    BALANCE_QUERY_PATTERN.test(text) &&
+    !GENERIC_DEBIT.test(text) &&
+    !GENERIC_CREDIT.test(text)
+  ) {
     return null;
   }
 
@@ -111,8 +123,14 @@ export function parseSms(sms) {
   }
 
   const merchant = extractMerchant(text);
-  const description = merchant ? `Payment ${type === 'debit' ? 'to' : 'from'} ${merchant}` : text.slice(0, 60);
-  const category = categorizeTransaction({ merchant: merchant || '', description: text, type });
+  const description = merchant
+    ? `Payment ${type === 'debit' ? 'to' : 'from'} ${merchant}`
+    : text.slice(0, 60);
+  const category = categorizeTransaction({
+    merchant: merchant || '',
+    description: text,
+    type,
+  });
 
   return {
     amount,
@@ -139,7 +157,9 @@ export function parseSmsBatch(smsList) {
   for (const sms of smsList) {
     try {
       const parsed = parseSms(sms);
-      if (parsed) results.push(parsed);
+      if (parsed) {
+        results.push(parsed);
+      }
     } catch (e) {
       // skip malformed message, continue processing the rest of the batch
       continue;
@@ -148,4 +168,4 @@ export function parseSmsBatch(smsList) {
   return results;
 }
 
-export default { parseSms, parseSmsBatch };
+export default {parseSms, parseSmsBatch};

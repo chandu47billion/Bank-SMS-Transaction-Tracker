@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, {useEffect, useRef} from 'react';
 import {
   View,
   Text,
@@ -8,11 +8,11 @@ import {
   ScrollView,
   Dimensions,
 } from 'react-native';
-import { Portal, Modal, IconButton, useTheme } from 'react-native-paper';
+import {Portal, Modal, IconButton, useTheme} from 'react-native-paper';
 
 const SCREEN_HEIGHT = Dimensions.get('window').height;
 
-export default function BottomSheet({ visible, onClose, title, children }) {
+export default function BottomSheet({visible, onClose, title, children}) {
   const theme = useTheme();
   const translateY = useRef(new Animated.Value(SCREEN_HEIGHT)).current;
 
@@ -37,22 +37,20 @@ export default function BottomSheet({ visible, onClose, title, children }) {
       <Modal
         visible={visible}
         onDismiss={onClose}
-        contentContainerStyle={styles.modalContainer}
-      >
+        contentContainerStyle={styles.modalContainer}>
         {/* Backdrop tap area — Modal's onDismiss handles it */}
         <Animated.View
           style={[
             styles.sheet,
             {
               backgroundColor: theme.colors.surface,
-              transform: [{ translateY }],
+              transform: [{translateY}],
             },
-          ]}
-        >
+          ]}>
           {/* Drag handle */}
           <View style={styles.handleRow}>
             <View
-              style={[styles.handle, { backgroundColor: theme.colors.border }]}
+              style={[styles.handle, {backgroundColor: theme.colors.border}]}
             />
           </View>
 
@@ -60,8 +58,7 @@ export default function BottomSheet({ visible, onClose, title, children }) {
           {title ? (
             <View style={styles.titleRow}>
               <Text
-                style={[styles.titleText, { color: theme.colors.textPrimary }]}
-              >
+                style={[styles.titleText, {color: theme.colors.textPrimary}]}>
                 {title}
               </Text>
               <IconButton
@@ -87,8 +84,7 @@ export default function BottomSheet({ visible, onClose, title, children }) {
           <ScrollView
             bounces={false}
             showsVerticalScrollIndicator={false}
-            keyboardShouldPersistTaps="handled"
-          >
+            keyboardShouldPersistTaps="handled">
             {children}
           </ScrollView>
         </Animated.View>

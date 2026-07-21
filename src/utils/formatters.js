@@ -2,7 +2,7 @@
  * Currency & date formatting helpers.
  */
 
-export function formatCurrency(amount, { compact = false } = {}) {
+export function formatCurrency(amount, {compact = false} = {}) {
   const value = Number(amount) || 0;
   if (compact && Math.abs(value) >= 100000) {
     return `₹${(value / 100000).toFixed(1)}L`;
@@ -10,7 +10,7 @@ export function formatCurrency(amount, { compact = false } = {}) {
   if (compact && Math.abs(value) >= 1000) {
     return `₹${(value / 1000).toFixed(1)}K`;
   }
-  return `₹${value.toLocaleString('en-IN', { maximumFractionDigits: 0 })}`;
+  return `₹${value.toLocaleString('en-IN', {maximumFractionDigits: 0})}`;
 }
 
 export function formatAmountWithSign(amount, type) {
@@ -19,13 +19,23 @@ export function formatAmountWithSign(amount, type) {
 }
 
 const MONTH_NAMES = [
-  'January', 'February', 'March', 'April', 'May', 'June',
-  'July', 'August', 'September', 'October', 'November', 'December',
+  'January',
+  'February',
+  'March',
+  'April',
+  'May',
+  'June',
+  'July',
+  'August',
+  'September',
+  'October',
+  'November',
+  'December',
 ];
 
 const DAY_NAMES = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 
-export function formatDate(isoString, { withYear = true } = {}) {
+export function formatDate(isoString, {withYear = true} = {}) {
   const d = new Date(isoString);
   const day = d.getDate();
   const month = MONTH_NAMES[d.getMonth()];
@@ -51,13 +61,23 @@ export function formatDayLabel(isoString) {
   const yesterday = new Date();
   yesterday.setDate(today.getDate() - 1);
 
-  if (isSameDay(d, today)) return 'Today';
-  if (isSameDay(d, yesterday)) return 'Yesterday';
-  return `${DAY_NAMES[d.getDay()]}, ${formatDate(isoString, { withYear: false })}`;
+  if (isSameDay(d, today)) {
+    return 'Today';
+  }
+  if (isSameDay(d, yesterday)) {
+    return 'Yesterday';
+  }
+  return `${DAY_NAMES[d.getDay()]}, ${formatDate(isoString, {
+    withYear: false,
+  })}`;
 }
 
 export function isSameDay(a, b) {
-  return a.getFullYear() === b.getFullYear() && a.getMonth() === b.getMonth() && a.getDate() === b.getDate();
+  return (
+    a.getFullYear() === b.getFullYear() &&
+    a.getMonth() === b.getMonth() &&
+    a.getDate() === b.getDate()
+  );
 }
 
 export function getMonthLabel(monthKey) {
@@ -67,8 +87,12 @@ export function getMonthLabel(monthKey) {
 
 export function formatCompactNumber(num) {
   const value = Number(num) || 0;
-  if (Math.abs(value) >= 100000) return `${(value / 100000).toFixed(1)}L`;
-  if (Math.abs(value) >= 1000) return `${(value / 1000).toFixed(1)}K`;
+  if (Math.abs(value) >= 100000) {
+    return `${(value / 100000).toFixed(1)}L`;
+  }
+  if (Math.abs(value) >= 1000) {
+    return `${(value / 1000).toFixed(1)}K`;
+  }
   return String(Math.round(value));
 }
 

@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useCallback } from 'react';
+import React, {useState, useMemo, useCallback} from 'react';
 import {
   View,
   Text,
@@ -8,29 +8,34 @@ import {
   StyleSheet,
   TouchableOpacity,
 } from 'react-native';
-import { useTheme } from 'react-native-paper';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import {useTheme} from 'react-native-paper';
+import {SafeAreaView} from 'react-native-safe-area-context';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import { useNavigation } from '@react-navigation/native';
+import {useNavigation} from '@react-navigation/native';
 
-import { useApp } from '../../store/AppContext';
-import { BANKS } from '../../data/banks';
-import { getDateRangeForFilter } from '../../utils/helpers';
-import { TransactionItem, FilterChip, EmptyState, SearchBar } from '../../components/common';
+import {useApp} from '../../store/AppContext';
+import {BANKS} from '../../data/banks';
+import {getDateRangeForFilter} from '../../utils/helpers';
+import {
+  TransactionItem,
+  FilterChip,
+  EmptyState,
+  SearchBar,
+} from '../../components/common';
 
 const PAGE_SIZE = 20;
 
 const DATE_FILTERS = [
-  { key: 'all', label: 'All' },
-  { key: 'today', label: 'Today' },
-  { key: 'week', label: 'This Week' },
-  { key: 'month', label: 'This Month' },
+  {key: 'all', label: 'All'},
+  {key: 'today', label: 'Today'},
+  {key: 'week', label: 'This Week'},
+  {key: 'month', label: 'This Month'},
 ];
 
 export default function TransactionsScreen() {
   const theme = useTheme();
   const navigation = useNavigation();
-  const { transactions, refreshing, refreshTransactions } = useApp();
+  const {transactions, refreshing, refreshTransactions} = useApp();
 
   const [searchQuery, setSearchQuery] = useState('');
   const [activeDateFilter, setActiveDateFilter] = useState('all');
@@ -41,7 +46,7 @@ export default function TransactionsScreen() {
     let result = transactions;
 
     if (activeDateFilter !== 'all') {
-      const { startISO, endISO } = getDateRangeForFilter(activeDateFilter);
+      const {startISO, endISO} = getDateRangeForFilter(activeDateFilter);
       result = result.filter(
         t => t.timestamp >= startISO && t.timestamp <= endISO,
       );
@@ -62,7 +67,9 @@ export default function TransactionsScreen() {
       );
     }
 
-    return [...result].sort((a, b) => (b.timestamp > a.timestamp ? 1 : -1));
+    return [...result].sort(
+      (a, b) => new Date(b.timestamp) - new Date(a.timestamp),
+    );
   }, [transactions, activeDateFilter, activeBankFilter, searchQuery]);
 
   const visibleData = useMemo(
@@ -102,10 +109,10 @@ export default function TransactionsScreen() {
     : 'Your bank SMS transactions will appear here automatically.';
 
   const renderItem = useCallback(
-    ({ item }) => (
+    ({item}) => (
       <TransactionItem
         transaction={item}
-        onPress={() => navigation.navigate('TransactionDetail', { id: item.id })}
+        onPress={() => navigation.navigate('TransactionDetail', {id: item.id})}
       />
     ),
     [navigation],
@@ -113,18 +120,23 @@ export default function TransactionsScreen() {
 
   const renderSeparator = useCallback(
     () => (
-      <View style={[styles.separator, { backgroundColor: theme.colors.border }]} />
+      <View
+        style={[styles.separator, {backgroundColor: theme.colors.border}]}
+      />
     ),
     [theme.colors.border],
   );
 
   const listHeader = (
-    <View style={[styles.filtersContainer, { backgroundColor: theme.colors.background }]}>
+    <View
+      style={[
+        styles.filtersContainer,
+        {backgroundColor: theme.colors.background},
+      ]}>
       <ScrollView
         horizontal
         showsHorizontalScrollIndicator={false}
-        contentContainerStyle={styles.chipRow}
-      >
+        contentContainerStyle={styles.chipRow}>
         {DATE_FILTERS.map(f => (
           <FilterChip
             key={f.key}
@@ -138,8 +150,7 @@ export default function TransactionsScreen() {
       <ScrollView
         horizontal
         showsHorizontalScrollIndicator={false}
-        contentContainerStyle={styles.chipRow}
-      >
+        contentContainerStyle={styles.chipRow}>
         <FilterChip
           label="All Banks"
           icon="bank"
@@ -172,22 +183,24 @@ export default function TransactionsScreen() {
 
   return (
     <SafeAreaView
-      style={[styles.safe, { backgroundColor: theme.colors.background }]}
-      edges={['top']}
-    >
-      <View style={[styles.header, { backgroundColor: theme.colors.background }]}>
-        <Text style={[styles.headerTitle, { color: theme.colors.textPrimary }]}>
+      style={[styles.safe, {backgroundColor: theme.colors.background}]}
+      edges={['top']}>
+      <View style={[styles.header, {backgroundColor: theme.colors.background}]}>
+        <Text style={[styles.headerTitle, {color: theme.colors.textPrimary}]}>
           Transactions
         </Text>
         <TouchableOpacity
           onPress={() => navigation.navigate('Search')}
-          style={styles.searchIcon}
-        >
+          style={styles.searchIcon}>
           <Icon name="magnify" size={24} color={theme.colors.textPrimary} />
         </TouchableOpacity>
       </View>
 
-      <View style={[styles.searchBarContainer, { backgroundColor: theme.colors.background }]}>
+      <View
+        style={[
+          styles.searchBarContainer,
+          {backgroundColor: theme.colors.background},
+        ]}>
         <SearchBar
           value={searchQuery}
           onChangeText={handleSearchChange}

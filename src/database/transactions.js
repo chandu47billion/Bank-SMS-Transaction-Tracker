@@ -2,7 +2,7 @@
  * CRUD + query helpers for the `transactions` table.
  */
 
-import { getDBConnection } from './db';
+import {getDBConnection} from './db';
 
 const rowsToArray = rows => {
   const arr = [];
@@ -68,7 +68,7 @@ export async function insertTransactionsBulk(txns) {
   });
 }
 
-export async function getAllTransactions({ limit, offset } = {}) {
+export async function getAllTransactions({limit, offset} = {}) {
   const db = await getDBConnection();
   let sql = 'SELECT * FROM transactions ORDER BY timestamp DESC';
   const params = [];
@@ -82,8 +82,13 @@ export async function getAllTransactions({ limit, offset } = {}) {
 
 export async function getTransactionById(id) {
   const db = await getDBConnection();
-  const [result] = await db.executeSql('SELECT * FROM transactions WHERE id = ?', [id]);
-  if (result.rows.length === 0) return null;
+  const [result] = await db.executeSql(
+    'SELECT * FROM transactions WHERE id = ?',
+    [id],
+  );
+  if (result.rows.length === 0) {
+    return null;
+  }
   return result.rows.item(0);
 }
 
@@ -96,7 +101,10 @@ export async function getTransactionsBetween(startISO, endISO) {
   return rowsToArray(result.rows);
 }
 
-export async function getTransactionsByCategory(categoryId, { startISO, endISO } = {}) {
+export async function getTransactionsByCategory(
+  categoryId,
+  {startISO, endISO} = {},
+) {
   const db = await getDBConnection();
   let sql = 'SELECT * FROM transactions WHERE category = ?';
   const params = [categoryId];
@@ -123,16 +131,24 @@ export async function searchTransactions(query) {
 
 export async function updateTransactionCategory(id, categoryId) {
   const db = await getDBConnection();
-  await db.executeSql('UPDATE transactions SET category = ? WHERE id = ?', [categoryId, id]);
+  await db.executeSql('UPDATE transactions SET category = ? WHERE id = ?', [
+    categoryId,
+    id,
+  ]);
 }
 
 export async function updateTransaction(id, fields) {
   const db = await getDBConnection();
   const keys = Object.keys(fields);
-  if (keys.length === 0) return;
+  if (keys.length === 0) {
+    return;
+  }
   const setClause = keys.map(k => `${k} = ?`).join(', ');
   const values = keys.map(k => fields[k]);
-  await db.executeSql(`UPDATE transactions SET ${setClause} WHERE id = ?`, [...values, id]);
+  await db.executeSql(`UPDATE transactions SET ${setClause} WHERE id = ?`, [
+    ...values,
+    id,
+  ]);
 }
 
 export async function deleteTransaction(id) {
@@ -147,7 +163,9 @@ export async function deleteAllTransactions() {
 
 export async function getTransactionCount() {
   const db = await getDBConnection();
-  const [result] = await db.executeSql('SELECT COUNT(*) as count FROM transactions');
+  const [result] = await db.executeSql(
+    'SELECT COUNT(*) as count FROM transactions',
+  );
   return result.rows.item(0).count;
 }
 
@@ -156,7 +174,9 @@ export async function getLatestBalance() {
   const [result] = await db.executeSql(
     'SELECT balance FROM transactions WHERE balance IS NOT NULL ORDER BY timestamp DESC LIMIT 1',
   );
-  if (result.rows.length === 0) return 0;
+  if (result.rows.length === 0) {
+    return 0;
+  }
   return result.rows.item(0).balance;
 }
 

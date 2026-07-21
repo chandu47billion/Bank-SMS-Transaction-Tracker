@@ -10,7 +10,17 @@ export const CATEGORIES = [
     emoji: '🍕',
     icon: 'food',
     color: '#F39C12',
-    keywords: ['swiggy', 'zomato', 'restaurant', 'food', 'cafe', 'dominos', 'pizza', 'eatsure', 'dineout'],
+    keywords: [
+      'swiggy',
+      'zomato',
+      'restaurant',
+      'food',
+      'cafe',
+      'dominos',
+      'pizza',
+      'eatsure',
+      'dineout',
+    ],
   },
   {
     id: 'shopping',
@@ -18,7 +28,17 @@ export const CATEGORIES = [
     emoji: '🛒',
     icon: 'cart',
     color: '#8E44AD',
-    keywords: ['amazon', 'flipkart', 'myntra', 'ajio', 'shopping', 'mall', 'store', 'nykaa', 'reliance retail'],
+    keywords: [
+      'amazon',
+      'flipkart',
+      'myntra',
+      'ajio',
+      'shopping',
+      'mall',
+      'store',
+      'nykaa',
+      'reliance retail',
+    ],
   },
   {
     id: 'bills',
@@ -26,7 +46,18 @@ export const CATEGORIES = [
     emoji: '💡',
     icon: 'file-document',
     color: '#F1C40F',
-    keywords: ['electricity', 'bescom', 'water bill', 'broadband', 'airtel', 'jio', 'vodafone', 'wifi', 'gas bill', 'dth'],
+    keywords: [
+      'electricity',
+      'bescom',
+      'water bill',
+      'broadband',
+      'airtel',
+      'jio',
+      'vodafone',
+      'wifi',
+      'gas bill',
+      'dth',
+    ],
   },
   {
     id: 'travel',
@@ -34,7 +65,18 @@ export const CATEGORIES = [
     emoji: '✈️',
     icon: 'airplane',
     color: '#3498DB',
-    keywords: ['irctc', 'makemytrip', 'goibibo', 'ola', 'uber', 'rapido', 'flight', 'train', 'redbus', 'indigo'],
+    keywords: [
+      'irctc',
+      'makemytrip',
+      'goibibo',
+      'ola',
+      'uber',
+      'rapido',
+      'flight',
+      'train',
+      'redbus',
+      'indigo',
+    ],
   },
   {
     id: 'fuel',
@@ -42,7 +84,16 @@ export const CATEGORIES = [
     emoji: '⛽',
     icon: 'gas-station',
     color: '#E74C3C',
-    keywords: ['petrol', 'diesel', 'fuel', 'hpcl', 'iocl', 'bpcl', 'shell', 'indianoil'],
+    keywords: [
+      'petrol',
+      'diesel',
+      'fuel',
+      'hpcl',
+      'iocl',
+      'bpcl',
+      'shell',
+      'indianoil',
+    ],
   },
   {
     id: 'medical',
@@ -50,7 +101,17 @@ export const CATEGORIES = [
     emoji: '💊',
     icon: 'medical-bag',
     color: '#EC7063',
-    keywords: ['pharmacy', 'apollo', 'hospital', 'clinic', 'medplus', 'medical', 'netmeds', '1mg', 'diagnostics'],
+    keywords: [
+      'pharmacy',
+      'apollo',
+      'hospital',
+      'clinic',
+      'medplus',
+      'medical',
+      'netmeds',
+      '1mg',
+      'diagnostics',
+    ],
   },
   {
     id: 'entertainment',
@@ -58,7 +119,16 @@ export const CATEGORIES = [
     emoji: '🎬',
     icon: 'movie-open',
     color: '#16A085',
-    keywords: ['netflix', 'spotify', 'hotstar', 'prime video', 'bookmyshow', 'pvr', 'inox', 'youtube premium'],
+    keywords: [
+      'netflix',
+      'spotify',
+      'hotstar',
+      'prime video',
+      'bookmyshow',
+      'pvr',
+      'inox',
+      'youtube premium',
+    ],
   },
   {
     id: 'salary',
@@ -94,6 +164,7 @@ export const CATEGORIES = [
   },
 ];
 
-export const getCategoryById = id => CATEGORIES.find(c => c.id === id) || CATEGORIES[CATEGORIES.length - 1];
+export const getCategoryById = id =>
+  CATEGORIES.find(c => c.id === id) || CATEGORIES[CATEGORIES.length - 1];
 
 export default CATEGORIES;

@@ -4,16 +4,26 @@
  * wrap the SQLite + SMS layers.
  */
 
-import React, { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react';
-import { Appearance } from 'react-native';
-import { initDatabase } from '../database/db';
+import React, {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useState,
+} from 'react';
+import {Appearance} from 'react-native';
+import {initDatabase} from '../database/db';
 import {
   getAllTransactions,
   insertTransactionsBulk,
   updateTransactionCategory as dbUpdateCategory,
   deleteTransaction as dbDeleteTransaction,
 } from '../database/transactions';
-import { getBudgetsForMonth, setBudget as dbSetBudget } from '../database/budgets';
+import {
+  getBudgetsForMonth,
+  setBudget as dbSetBudget,
+} from '../database/budgets';
 import {
   getBoolSetting,
   setBoolSetting,
@@ -21,15 +31,21 @@ import {
   setSetting,
   SETTINGS_KEYS,
 } from '../database/settings';
-import { requestSmsPermission, checkSmsPermission, readAndParseInboxSms } from '../sms/bridge';
+import {
+  requestSmsPermission,
+  checkSmsPermission,
+  readAndParseInboxSms,
+} from '../sms/bridge';
 
 const AppContext = createContext(null);
 
-export function AppProvider({ children }) {
+export function AppProvider({children}) {
   const [isReady, setIsReady] = useState(false);
   const [transactions, setTransactions] = useState([]);
   const [budgets, setBudgets] = useState([]);
-  const [isDarkMode, setIsDarkMode] = useState(Appearance.getColorScheme() === 'dark');
+  const [isDarkMode, setIsDarkMode] = useState(
+    Appearance.getColorScheme() === 'dark',
+  );
   const [smsPermissionGranted, setSmsPermissionGranted] = useState(false);
   const [onboardingComplete, setOnboardingComplete] = useState(false);
   const [userName, setUserName] = useState('Arjun Mehta');
@@ -38,16 +54,26 @@ export function AppProvider({ children }) {
 
   const bootstrap = useCallback(async () => {
     await initDatabase();
-    const [txns, storedDark, storedOnboarding, storedSmsPerm, storedName, storedEmail, monthBudgets] =
-      await Promise.all([
-        getAllTransactions(),
-        getBoolSetting(SETTINGS_KEYS.DARK_MODE, Appearance.getColorScheme() === 'dark'),
-        getBoolSetting(SETTINGS_KEYS.ONBOARDING_COMPLETE, false),
-        getBoolSetting(SETTINGS_KEYS.SMS_PERMISSION_GRANTED, false),
-        getSetting(SETTINGS_KEYS.USER_NAME, 'Arjun Mehta'),
-        getSetting(SETTINGS_KEYS.USER_EMAIL, 'arjun.mehta@example.com'),
-        getBudgetsForMonth(),
-      ]);
+    const [
+      txns,
+      storedDark,
+      storedOnboarding,
+      storedSmsPerm,
+      storedName,
+      storedEmail,
+      monthBudgets,
+    ] = await Promise.all([
+      getAllTransactions(),
+      getBoolSetting(
+        SETTINGS_KEYS.DARK_MODE,
+        Appearance.getColorScheme() === 'dark',
+      ),
+      getBoolSetting(SETTINGS_KEYS.ONBOARDING_COMPLETE, false),
+      getBoolSetting(SETTINGS_KEYS.SMS_PERMISSION_GRANTED, false),
+      getSetting(SETTINGS_KEYS.USER_NAME, 'Arjun Mehta'),
+      getSetting(SETTINGS_KEYS.USER_EMAIL, 'arjun.mehta@example.com'),
+      getBudgetsForMonth(),
+    ]);
     setTransactions(txns);
     setIsDarkMode(storedDark);
     setOnboardingComplete(storedOnboarding);
@@ -130,7 +156,7 @@ export function AppProvider({ children }) {
     setBudgets(monthBudgets);
   }, []);
 
-  const updateProfile = useCallback(async ({ name, email }) => {
+  const updateProfile = useCallback(async ({name, email}) => {
     if (name != null) {
       await setSetting(SETTINGS_KEYS.USER_NAME, name);
       setUserName(name);
@@ -189,7 +215,9 @@ export function AppProvider({ children }) {
 
 export function useApp() {
   const ctx = useContext(AppContext);
-  if (!ctx) throw new Error('useApp must be used within an AppProvider');
+  if (!ctx) {
+    throw new Error('useApp must be used within an AppProvider');
+  }
   return ctx;
 }
 

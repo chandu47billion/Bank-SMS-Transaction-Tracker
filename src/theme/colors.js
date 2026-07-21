@@ -76,4 +76,4 @@ export const gradients = {
   premium: ['#F39C12', '#E67E22'],
 };
 
-export default { palette, lightColors, darkColors, gradients };
+export default {palette, lightColors, darkColors, gradients};

@@ -29,14 +29,17 @@ export const lineHeights = {
 };
 
 export const typography = {
-  displayLarge: { fontSize: fontSizes.display, fontWeight: fontWeights.extraBold },
-  headline: { fontSize: fontSizes.xxl, fontWeight: fontWeights.bold },
-  title: { fontSize: fontSizes.xl, fontWeight: fontWeights.bold },
-  subtitle: { fontSize: fontSizes.lg, fontWeight: fontWeights.semiBold },
-  body: { fontSize: fontSizes.base, fontWeight: fontWeights.regular },
-  bodyMedium: { fontSize: fontSizes.base, fontWeight: fontWeights.medium },
-  label: { fontSize: fontSizes.sm, fontWeight: fontWeights.medium },
-  caption: { fontSize: fontSizes.xs, fontWeight: fontWeights.regular },
+  displayLarge: {
+    fontSize: fontSizes.display,
+    fontWeight: fontWeights.extraBold,
+  },
+  headline: {fontSize: fontSizes.xxl, fontWeight: fontWeights.bold},
+  title: {fontSize: fontSizes.xl, fontWeight: fontWeights.bold},
+  subtitle: {fontSize: fontSizes.lg, fontWeight: fontWeights.semiBold},
+  body: {fontSize: fontSizes.base, fontWeight: fontWeights.regular},
+  bodyMedium: {fontSize: fontSizes.base, fontWeight: fontWeights.medium},
+  label: {fontSize: fontSizes.sm, fontWeight: fontWeights.medium},
+  caption: {fontSize: fontSizes.xs, fontWeight: fontWeights.regular},
 };
 
-export default { fontSizes, fontWeights, lineHeights, typography };
+export default {fontSizes, fontWeights, lineHeights, typography};

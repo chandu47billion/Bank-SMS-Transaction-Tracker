@@ -1,9 +1,9 @@
 import React from 'react';
-import { TouchableOpacity, Text, View, StyleSheet } from 'react-native';
-import { useTheme } from 'react-native-paper';
+import {TouchableOpacity, Text, View, StyleSheet} from 'react-native';
+import {useTheme} from 'react-native-paper';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
-export default function FilterChip({ label, selected, onPress, icon }) {
+export default function FilterChip({label, selected, onPress, icon}) {
   const theme = useTheme();
 
   const backgroundColor = selected ? theme.colors.primary : 'transparent';
@@ -21,17 +21,11 @@ export default function FilterChip({ label, selected, onPress, icon }) {
           backgroundColor,
           borderColor,
         },
-      ]}
-    >
+      ]}>
       {icon ? (
-        <Icon
-          name={icon}
-          size={14}
-          color={iconColor}
-          style={styles.icon}
-        />
+        <Icon name={icon} size={14} color={iconColor} style={styles.icon} />
       ) : null}
-      <Text style={[styles.label, { color: textColor }]}>{label}</Text>
+      <Text style={[styles.label, {color: textColor}]}>{label}</Text>
     </TouchableOpacity>
   );
 }

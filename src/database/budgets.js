@@ -3,7 +3,7 @@
  * Budgets are stored per category, per month (monthKey format: 'YYYY-MM').
  */
 
-import { getDBConnection } from './db';
+import {getDBConnection} from './db';
 
 const rowsToArray = rows => {
   const arr = [];
@@ -20,11 +20,18 @@ export const currentMonthKey = () => {
 
 export async function getBudgetsForMonth(monthKey = currentMonthKey()) {
   const db = await getDBConnection();
-  const [result] = await db.executeSql('SELECT * FROM budgets WHERE monthKey = ?', [monthKey]);
+  const [result] = await db.executeSql(
+    'SELECT * FROM budgets WHERE monthKey = ?',
+    [monthKey],
+  );
   return rowsToArray(result.rows);
 }
 
-export async function setBudget(categoryId, limitAmount, monthKey = currentMonthKey()) {
+export async function setBudget(
+  categoryId,
+  limitAmount,
+  monthKey = currentMonthKey(),
+) {
   const db = await getDBConnection();
   const id = `${categoryId}_${monthKey}`;
   await db.executeSql(
@@ -36,17 +43,31 @@ export async function setBudget(categoryId, limitAmount, monthKey = currentMonth
 
 export async function deleteBudget(categoryId, monthKey = currentMonthKey()) {
   const db = await getDBConnection();
-  await db.executeSql('DELETE FROM budgets WHERE categoryId = ? AND monthKey = ?', [categoryId, monthKey]);
+  await db.executeSql(
+    'DELETE FROM budgets WHERE categoryId = ? AND monthKey = ?',
+    [categoryId, monthKey],
+  );
 }
 
-export async function getBudgetForCategory(categoryId, monthKey = currentMonthKey()) {
+export async function getBudgetForCategory(
+  categoryId,
+  monthKey = currentMonthKey(),
+) {
   const db = await getDBConnection();
   const [result] = await db.executeSql(
     'SELECT * FROM budgets WHERE categoryId = ? AND monthKey = ?',
     [categoryId, monthKey],
   );
-  if (result.rows.length === 0) return null;
+  if (result.rows.length === 0) {
+    return null;
+  }
   return result.rows.item(0);
 }
 
-export default { getBudgetsForMonth, setBudget, deleteBudget, getBudgetForCategory, currentMonthKey };
+export default {
+  getBudgetsForMonth,
+  setBudget,
+  deleteBudget,
+  getBudgetForCategory,
+  currentMonthKey,
+};

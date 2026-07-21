@@ -4,23 +4,33 @@
  * booleans/JSON as needed.
  */
 
-import { getDBConnection } from './db';
+import {getDBConnection} from './db';
 
 export async function getSetting(key, defaultValue = null) {
   const db = await getDBConnection();
-  const [result] = await db.executeSql('SELECT value FROM settings WHERE key = ?', [key]);
-  if (result.rows.length === 0) return defaultValue;
+  const [result] = await db.executeSql(
+    'SELECT value FROM settings WHERE key = ?',
+    [key],
+  );
+  if (result.rows.length === 0) {
+    return defaultValue;
+  }
   return result.rows.item(0).value;
 }
 
 export async function setSetting(key, value) {
   const db = await getDBConnection();
-  await db.executeSql('INSERT OR REPLACE INTO settings (key, value) VALUES (?, ?)', [key, String(value)]);
+  await db.executeSql(
+    'INSERT OR REPLACE INTO settings (key, value) VALUES (?, ?)',
+    [key, String(value)],
+  );
 }
 
 export async function getBoolSetting(key, defaultValue = false) {
   const value = await getSetting(key, null);
-  if (value === null) return defaultValue;
+  if (value === null) {
+    return defaultValue;
+  }
   return value === 'true';
 }
 
@@ -30,7 +40,9 @@ export async function setBoolSetting(key, value) {
 
 export async function getJSONSetting(key, defaultValue = null) {
   const value = await getSetting(key, null);
-  if (value === null) return defaultValue;
+  if (value === null) {
+    return defaultValue;
+  }
   try {
     return JSON.parse(value);
   } catch (e) {

@@ -1,26 +1,20 @@
-import React, { useMemo, useState, useCallback } from 'react';
-import {
-  View,
-  Text,
-  StyleSheet,
-  FlatList,
-  TouchableOpacity,
-} from 'react-native';
-import { useTheme, IconButton } from 'react-native-paper';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import { useNavigation } from '@react-navigation/native';
+import React, {useMemo, useState, useCallback} from 'react';
+import {View, Text, StyleSheet, FlatList, TouchableOpacity} from 'react-native';
+import {useTheme, IconButton} from 'react-native-paper';
+import {SafeAreaView} from 'react-native-safe-area-context';
+import {useNavigation} from '@react-navigation/native';
 
-import { useApp } from '../../store/AppContext';
-import { CATEGORIES } from '../../data/categories';
-import { getCurrentMonthRange } from '../../utils/helpers';
-import { formatCurrency } from '../../utils/formatters';
-import { Card, TransactionItem, EmptyState } from '../../components/common';
-import { BottomSheet } from '../../components/dialogs';
+import {useApp} from '../../store/AppContext';
+import {CATEGORIES} from '../../data/categories';
+import {getCurrentMonthRange} from '../../utils/helpers';
+import {formatCurrency} from '../../utils/formatters';
+import {Card, TransactionItem, EmptyState} from '../../components/common';
+import {BottomSheet} from '../../components/dialogs';
 
 export default function CategoriesScreen() {
   const theme = useTheme();
   const navigation = useNavigation();
-  const { transactions } = useApp();
+  const {transactions} = useApp();
 
   const [sheetVisible, setSheetVisible] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState(null);
@@ -47,13 +41,15 @@ export default function CategoriesScreen() {
   }, [monthlyDebits]);
 
   const categoryTransactions = useMemo(() => {
-    if (!selectedCategory) return [];
+    if (!selectedCategory) {
+      return [];
+    }
     return monthlyDebits
       .filter(t => t.category === selectedCategory.id)
       .sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
   }, [monthlyDebits, selectedCategory]);
 
-  const openSheet = useCallback((cat) => {
+  const openSheet = useCallback(cat => {
     setSelectedCategory(cat);
     setSheetVisible(true);
   }, []);
@@ -63,46 +59,65 @@ export default function CategoriesScreen() {
     setSelectedCategory(null);
   }, []);
 
-  const handleTransactionPress = useCallback((txn) => {
-    closeSheet();
-    setTimeout(() => {
-      navigation.navigate('TransactionDetail', { id: txn.id });
-    }, 250);
-  }, [navigation, closeSheet]);
+  const handleTransactionPress = useCallback(
+    txn => {
+      closeSheet();
+      setTimeout(() => {
+        navigation.navigate('TransactionDetail', {id: txn.id});
+      }, 250);
+    },
+    [navigation, closeSheet],
+  );
 
   const s = styles(theme);
 
-  const renderCategory = useCallback(({ item: cat }) => {
-    const spent = spendByCategoryId[cat.id] || 0;
-    return (
-      <TouchableOpacity
-        style={s.cardWrapper}
-        onPress={() => openSheet(cat)}
-        activeOpacity={0.78}
-      >
-        <Card style={s.categoryCard}>
-          <View style={[s.colorBar, { backgroundColor: cat.color }]} />
-          <View style={s.cardBody}>
-            <View style={[s.iconCircle, { backgroundColor: cat.color + '22' }]}>
-              <Text style={s.emoji}>{cat.emoji}</Text>
+  const renderCategory = useCallback(
+    ({item: cat}) => {
+      const spent = spendByCategoryId[cat.id] || 0;
+      return (
+        <TouchableOpacity
+          style={s.cardWrapper}
+          onPress={() => openSheet(cat)}
+          activeOpacity={0.78}>
+          <Card style={s.categoryCard}>
+            <View style={[s.colorBar, {backgroundColor: cat.color}]} />
+            <View style={s.cardBody}>
+              <View style={[s.iconCircle, {backgroundColor: cat.color + '22'}]}>
+                <Text style={s.emoji}>{cat.emoji}</Text>
+              </View>
+              <Text
+                style={[s.catName, {color: theme.colors.textPrimary}]}
+                numberOfLines={1}>
+                {cat.name}
+              </Text>
+              <Text
+                style={[
+                  s.catSpend,
+                  {
+                    color:
+                      spent > 0
+                        ? theme.colors.expense
+                        : theme.colors.textSecondary,
+                  },
+                ]}>
+                {formatCurrency(spent, {compact: true})}
+              </Text>
+              <Text
+                style={[s.catSpendLabel, {color: theme.colors.textSecondary}]}>
+                spent this month
+              </Text>
             </View>
-            <Text style={[s.catName, { color: theme.colors.textPrimary }]} numberOfLines={1}>
-              {cat.name}
-            </Text>
-            <Text style={[s.catSpend, { color: spent > 0 ? theme.colors.expense : theme.colors.textSecondary }]}>
-              {formatCurrency(spent, { compact: true })}
-            </Text>
-            <Text style={[s.catSpendLabel, { color: theme.colors.textSecondary }]}>
-              spent this month
-            </Text>
-          </View>
-        </Card>
-      </TouchableOpacity>
-    );
-  }, [spendByCategoryId, theme, openSheet, s]);
+          </Card>
+        </TouchableOpacity>
+      );
+    },
+    [spendByCategoryId, theme, openSheet, s],
+  );
 
   return (
-    <SafeAreaView style={[s.safe, { backgroundColor: theme.colors.background }]} edges={['top']}>
+    <SafeAreaView
+      style={[s.safe, {backgroundColor: theme.colors.background}]}
+      edges={['top']}>
       <View style={s.header}>
         <IconButton
           icon="arrow-left"
@@ -111,7 +126,9 @@ export default function CategoriesScreen() {
           onPress={() => navigation.goBack()}
           style={s.backBtn}
         />
-        <Text style={[s.headerTitle, { color: theme.colors.textPrimary }]}>Categories</Text>
+        <Text style={[s.headerTitle, {color: theme.colors.textPrimary}]}>
+          Categories
+        </Text>
         <View style={s.headerSpacer} />
       </View>
 
@@ -128,8 +145,11 @@ export default function CategoriesScreen() {
       <BottomSheet
         visible={sheetVisible}
         onClose={closeSheet}
-        title={selectedCategory ? `${selectedCategory.emoji}  ${selectedCategory.name}` : ''}
-      >
+        title={
+          selectedCategory
+            ? `${selectedCategory.emoji}  ${selectedCategory.name}`
+            : ''
+        }>
         <View style={s.sheetContent}>
           {categoryTransactions.length === 0 ? (
             <EmptyState

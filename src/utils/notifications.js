@@ -4,18 +4,22 @@
  * (no push notifications - these are shown in the Notifications screen).
  */
 
-import { formatCurrency, formatDayLabel } from './formatters';
-import { getCurrentMonthRange, summarizeTransactions } from './helpers';
+import {formatCurrency, formatDayLabel} from './formatters';
+import {getCurrentMonthRange, summarizeTransactions} from './helpers';
 
 const LARGE_EXPENSE_THRESHOLD = 5000;
 const LOW_BALANCE_THRESHOLD = 2000;
 
 export function generateNotifications(transactions) {
   const notifications = [];
-  const sorted = [...transactions].sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+  const sorted = [...transactions].sort(
+    (a, b) => new Date(b.timestamp) - new Date(a.timestamp),
+  );
 
   // Salary credited
-  const salaryTxns = sorted.filter(t => t.category === 'salary' && t.type === 'credit');
+  const salaryTxns = sorted.filter(
+    t => t.category === 'salary' && t.type === 'credit',
+  );
   if (salaryTxns.length > 0) {
     const t = salaryTxns[0];
     notifications.push({
@@ -24,7 +28,9 @@ export function generateNotifications(transactions) {
       icon: 'cash-multiple',
       color: '#27AE60',
       title: 'Salary Credited',
-      message: `${formatCurrency(t.amount)} credited to your ${t.bank ? t.bank.toUpperCase() : ''} account`,
+      message: `${formatCurrency(t.amount)} credited to your ${
+        t.bank ? t.bank.toUpperCase() : ''
+      } account`,
       timestamp: t.timestamp,
     });
   }
@@ -40,7 +46,9 @@ export function generateNotifications(transactions) {
         icon: 'alert-circle',
         color: '#E74C3C',
         title: 'Large Expense Alert',
-        message: `${formatCurrency(t.amount)} spent on ${t.merchant || 'a transaction'}`,
+        message: `${formatCurrency(t.amount)} spent on ${
+          t.merchant || 'a transaction'
+        }`,
         timestamp: t.timestamp,
       });
     });
@@ -54,7 +62,9 @@ export function generateNotifications(transactions) {
       icon: 'alert',
       color: '#F39C12',
       title: 'Low Balance Warning',
-      message: `Your available balance is ${formatCurrency(latestWithBalance.balance)}`,
+      message: `Your available balance is ${formatCurrency(
+        latestWithBalance.balance,
+      )}`,
       timestamp: latestWithBalance.timestamp,
     });
   }
@@ -77,25 +87,35 @@ export function generateNotifications(transactions) {
       icon: 'chart-line',
       color: '#2E86AB',
       title: 'Weekly Summary',
-      message: `You spent ${formatCurrency(summary.debit)} and received ${formatCurrency(summary.credit)} this week`,
+      message: `You spent ${formatCurrency(
+        summary.debit,
+      )} and received ${formatCurrency(summary.credit)} this week`,
       timestamp: new Date().toISOString(),
     });
   }
 
-  return notifications.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+  return notifications.sort(
+    (a, b) => new Date(b.timestamp) - new Date(a.timestamp),
+  );
 }
 
 function detectUnusualSpending(sortedTxns) {
   const today = new Date();
   today.setHours(0, 0, 0, 0);
-  const todayTxns = sortedTxns.filter(t => new Date(t.timestamp) >= today && t.type === 'debit');
-  if (todayTxns.length === 0) return null;
+  const todayTxns = sortedTxns.filter(
+    t => new Date(t.timestamp) >= today && t.type === 'debit',
+  );
+  if (todayTxns.length === 0) {
+    return null;
+  }
 
   const todayTotal = todayTxns.reduce((sum, t) => sum + t.amount, 0);
 
   const past30 = new Date();
   past30.setDate(past30.getDate() - 30);
-  const recentDebits = sortedTxns.filter(t => t.type === 'debit' && new Date(t.timestamp) >= past30);
+  const recentDebits = sortedTxns.filter(
+    t => t.type === 'debit' && new Date(t.timestamp) >= past30,
+  );
   const dailyAvg = recentDebits.reduce((sum, t) => sum + t.amount, 0) / 30;
 
   if (dailyAvg > 0 && todayTotal > dailyAvg * 2) {
@@ -105,7 +125,11 @@ function detectUnusualSpending(sortedTxns) {
       icon: 'trending-up',
       color: '#8E44AD',
       title: 'Unusual Spending Detected',
-      message: `${formatDayLabel(today.toISOString())}'s spending (${formatCurrency(todayTotal)}) is higher than your daily average`,
+      message: `${formatDayLabel(
+        today.toISOString(),
+      )}'s spending (${formatCurrency(
+        todayTotal,
+      )}) is higher than your daily average`,
       timestamp: new Date().toISOString(),
     };
   }
@@ -113,8 +137,10 @@ function detectUnusualSpending(sortedTxns) {
 }
 
 export function getMonthlySpendAlert(transactions, budgetTotal) {
-  const { startISO, endISO } = getCurrentMonthRange();
-  const monthTxns = transactions.filter(t => t.timestamp >= startISO && t.timestamp <= endISO && t.type === 'debit');
+  const {startISO, endISO} = getCurrentMonthRange();
+  const monthTxns = transactions.filter(
+    t => t.timestamp >= startISO && t.timestamp <= endISO && t.type === 'debit',
+  );
   const spent = monthTxns.reduce((sum, t) => sum + t.amount, 0);
   if (budgetTotal > 0 && spent > budgetTotal) {
     return {
@@ -123,11 +149,13 @@ export function getMonthlySpendAlert(transactions, budgetTotal) {
       icon: 'alert-octagon',
       color: '#E74C3C',
       title: 'Budget Exceeded',
-      message: `You've spent ${formatCurrency(spent)} against a budget of ${formatCurrency(budgetTotal)} this month`,
+      message: `You've spent ${formatCurrency(
+        spent,
+      )} against a budget of ${formatCurrency(budgetTotal)} this month`,
       timestamp: new Date().toISOString(),
     };
   }
   return null;
 }
 
-export default { generateNotifications, getMonthlySpendAlert };
+export default {generateNotifications, getMonthlySpendAlert};

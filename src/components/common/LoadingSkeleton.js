@@ -1,8 +1,8 @@
-import React, { useEffect, useRef } from 'react';
-import { View, Animated, StyleSheet } from 'react-native';
-import { useTheme } from 'react-native-paper';
+import React, {useEffect, useRef} from 'react';
+import {View, Animated, StyleSheet} from 'react-native';
+import {useTheme} from 'react-native-paper';
 
-function SkeletonRow({ height, animatedOpacity, theme }) {
+function SkeletonRow({height, animatedOpacity, theme}) {
   return (
     <Animated.View
       style={[
@@ -17,7 +17,7 @@ function SkeletonRow({ height, animatedOpacity, theme }) {
   );
 }
 
-export default function LoadingSkeleton({ count = 5, height = 64 }) {
+export default function LoadingSkeleton({count = 5, height = 64}) {
   const theme = useTheme();
   const animatedOpacity = useRef(new Animated.Value(0.4)).current;
 
@@ -42,7 +42,7 @@ export default function LoadingSkeleton({ count = 5, height = 64 }) {
 
   return (
     <View style={styles.container}>
-      {Array.from({ length: count }).map((_, index) => (
+      {Array.from({length: count}).map((_, index) => (
         <SkeletonRow
           key={index}
           height={height}

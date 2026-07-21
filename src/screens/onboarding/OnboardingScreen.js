@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, {useRef, useState} from 'react';
 import {
   View,
   Text,
@@ -7,14 +7,14 @@ import {
   Dimensions,
   TouchableOpacity,
 } from 'react-native';
-import { useTheme } from 'react-native-paper';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import {useTheme} from 'react-native-paper';
+import {SafeAreaView} from 'react-native-safe-area-context';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import { useNavigation } from '@react-navigation/native';
-import { useApp } from '../../store/AppContext';
-import { Button } from '../../components/common';
+import {useNavigation} from '@react-navigation/native';
+import {useApp} from '../../store/AppContext';
+import {Button} from '../../components/common';
 
-const { width: SCREEN_WIDTH } = Dimensions.get('window');
+const {width: SCREEN_WIDTH} = Dimensions.get('window');
 
 const PAGES = [
   {
@@ -40,7 +40,7 @@ const PAGES = [
 export default function OnboardingScreen() {
   const theme = useTheme();
   const navigation = useNavigation();
-  const { completeOnboarding } = useApp();
+  const {completeOnboarding} = useApp();
   const scrollRef = useRef(null);
   const [currentPage, setCurrentPage] = useState(0);
   const [loading, setLoading] = useState(false);
@@ -52,7 +52,7 @@ export default function OnboardingScreen() {
   };
 
   const goToPage = page => {
-    scrollRef.current?.scrollTo({ x: page * SCREEN_WIDTH, animated: true });
+    scrollRef.current?.scrollTo({x: page * SCREEN_WIDTH, animated: true});
     setCurrentPage(page);
   };
 
@@ -81,12 +81,16 @@ export default function OnboardingScreen() {
   const isLastPage = currentPage === PAGES.length - 1;
 
   return (
-    <SafeAreaView style={[styles.safe, { backgroundColor: theme.colors.background }]}>
+    <SafeAreaView
+      style={[styles.safe, {backgroundColor: theme.colors.background}]}>
       {/* Skip button */}
       <View style={styles.headerRow}>
         {!isLastPage ? (
           <TouchableOpacity onPress={handleSkip} style={styles.skipButton}>
-            <Text style={[styles.skipText, { color: theme.colors.textSecondary }]}>Skip</Text>
+            <Text
+              style={[styles.skipText, {color: theme.colors.textSecondary}]}>
+              Skip
+            </Text>
           </TouchableOpacity>
         ) : (
           <View style={styles.skipButton} />
@@ -101,22 +105,24 @@ export default function OnboardingScreen() {
         showsHorizontalScrollIndicator={false}
         onMomentumScrollEnd={handleMomentumScrollEnd}
         scrollEventThrottle={16}
-        style={styles.scrollView}
-      >
+        style={styles.scrollView}>
         {PAGES.map((page, index) => (
           <View key={index} style={styles.page}>
             <View
               style={[
                 styles.iconCircle,
-                { backgroundColor: `${theme.colors.primary}18` },
-              ]}
-            >
+                {backgroundColor: `${theme.colors.primary}18`},
+              ]}>
               <Icon name={page.icon} size={80} color={theme.colors.primary} />
             </View>
-            <Text style={[styles.pageTitle, { color: theme.colors.textPrimary }]}>
+            <Text style={[styles.pageTitle, {color: theme.colors.textPrimary}]}>
               {page.title}
             </Text>
-            <Text style={[styles.pageDescription, { color: theme.colors.textSecondary }]}>
+            <Text
+              style={[
+                styles.pageDescription,
+                {color: theme.colors.textSecondary},
+              ]}>
               {page.description}
             </Text>
           </View>
@@ -132,8 +138,14 @@ export default function OnboardingScreen() {
                 style={[
                   styles.dot,
                   index === currentPage
-                    ? [styles.dotActive, { backgroundColor: theme.colors.primary }]
-                    : [styles.dotInactive, { backgroundColor: theme.colors.border }],
+                    ? [
+                        styles.dotActive,
+                        {backgroundColor: theme.colors.primary},
+                      ]
+                    : [
+                        styles.dotInactive,
+                        {backgroundColor: theme.colors.border},
+                      ],
                 ]}
               />
             </TouchableOpacity>

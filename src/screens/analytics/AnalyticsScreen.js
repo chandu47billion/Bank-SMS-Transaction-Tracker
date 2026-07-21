@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useCallback } from 'react';
+import React, {useState, useMemo, useCallback} from 'react';
 import {
   View,
   Text,
@@ -6,12 +6,12 @@ import {
   TouchableOpacity,
   StyleSheet,
 } from 'react-native';
-import { useTheme } from 'react-native-paper';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import {useTheme} from 'react-native-paper';
+import {SafeAreaView} from 'react-native-safe-area-context';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import { useNavigation } from '@react-navigation/native';
+import {useNavigation} from '@react-navigation/native';
 
-import { useApp } from '../../store/AppContext';
+import {useApp} from '../../store/AppContext';
 import {
   getMonthRange,
   summarizeTransactions,
@@ -23,7 +23,7 @@ import {
   formatAmountWithSign,
   getMonthLabel,
 } from '../../utils/formatters';
-import { Card, EmptyState } from '../../components/common';
+import {Card, EmptyState} from '../../components/common';
 import {
   SpendingPieChart,
   MonthlyTrendChart,
@@ -45,8 +45,20 @@ function addMonths(monthKey, delta) {
   return `${ny}-${nm}`;
 }
 
-const SHORT_MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
-  'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+const SHORT_MONTHS = [
+  'Jan',
+  'Feb',
+  'Mar',
+  'Apr',
+  'May',
+  'Jun',
+  'Jul',
+  'Aug',
+  'Sep',
+  'Oct',
+  'Nov',
+  'Dec',
+];
 
 function shortMonthLabel(monthKey) {
   const [, m] = monthKey.split('-').map(Number);
@@ -56,7 +68,7 @@ function shortMonthLabel(monthKey) {
 export default function AnalyticsScreen() {
   const theme = useTheme();
   const navigation = useNavigation();
-  const { transactions } = useApp();
+  const {transactions} = useApp();
 
   const [selectedMonthKey, setSelectedMonthKey] = useState(getCurrentMonthKey);
 
@@ -74,15 +86,21 @@ export default function AnalyticsScreen() {
   const isCurrentMonth = selectedMonthKey === getCurrentMonthKey();
 
   const monthlyTxns = useMemo(() => {
-    const { startISO, endISO } = getMonthRange(selectedMonthKey);
+    const {startISO, endISO} = getMonthRange(selectedMonthKey);
     return transactions.filter(
       t => t.timestamp >= startISO && t.timestamp <= endISO,
     );
   }, [transactions, selectedMonthKey]);
 
-  const summary = useMemo(() => summarizeTransactions(monthlyTxns), [monthlyTxns]);
+  const summary = useMemo(
+    () => summarizeTransactions(monthlyTxns),
+    [monthlyTxns],
+  );
 
-  const categoryData = useMemo(() => groupByCategory(monthlyTxns), [monthlyTxns]);
+  const categoryData = useMemo(
+    () => groupByCategory(monthlyTxns),
+    [monthlyTxns],
+  );
 
   const dayData = useMemo(() => groupByDay(monthlyTxns), [monthlyTxns]);
 
@@ -90,7 +108,7 @@ export default function AnalyticsScreen() {
     const result = [];
     for (let i = 5; i >= 0; i--) {
       const mk = addMonths(selectedMonthKey, -i);
-      const { startISO, endISO } = getMonthRange(mk);
+      const {startISO, endISO} = getMonthRange(mk);
       const txns = transactions.filter(
         t => t.timestamp >= startISO && t.timestamp <= endISO,
       );
@@ -106,14 +124,24 @@ export default function AnalyticsScreen() {
 
   const highestIncome = useMemo(() => {
     const credits = monthlyTxns.filter(t => t.type === 'credit');
-    if (!credits.length) return null;
-    return credits.reduce((max, t) => (t.amount > max.amount ? t : max), credits[0]);
+    if (!credits.length) {
+      return null;
+    }
+    return credits.reduce(
+      (max, t) => (t.amount > max.amount ? t : max),
+      credits[0],
+    );
   }, [monthlyTxns]);
 
   const highestExpense = useMemo(() => {
     const debits = monthlyTxns.filter(t => t.type === 'debit');
-    if (!debits.length) return null;
-    return debits.reduce((max, t) => (t.amount > max.amount ? t : max), debits[0]);
+    if (!debits.length) {
+      return null;
+    }
+    return debits.reduce(
+      (max, t) => (t.amount > max.amount ? t : max),
+      debits[0],
+    );
   }, [monthlyTxns]);
 
   const maxDayDebit = useMemo(
@@ -123,27 +151,27 @@ export default function AnalyticsScreen() {
 
   return (
     <SafeAreaView
-      style={[styles.safe, { backgroundColor: theme.colors.background }]}
-      edges={['top']}
-    >
+      style={[styles.safe, {backgroundColor: theme.colors.background}]}
+      edges={['top']}>
       {/* Month selector */}
       <View
         style={[
           styles.monthSelector,
-          { backgroundColor: theme.colors.background, borderBottomColor: theme.colors.border },
-        ]}
-      >
+          {
+            backgroundColor: theme.colors.background,
+            borderBottomColor: theme.colors.border,
+          },
+        ]}>
         <TouchableOpacity onPress={goToPrevMonth} style={styles.chevronBtn}>
           <Icon name="chevron-left" size={28} color={theme.colors.primary} />
         </TouchableOpacity>
-        <Text style={[styles.monthLabel, { color: theme.colors.textPrimary }]}>
+        <Text style={[styles.monthLabel, {color: theme.colors.textPrimary}]}>
           {getMonthLabel(selectedMonthKey)}
         </Text>
         <TouchableOpacity
           onPress={goToNextMonth}
           style={styles.chevronBtn}
-          disabled={isCurrentMonth}
-        >
+          disabled={isCurrentMonth}>
           <Icon
             name="chevron-right"
             size={28}
@@ -161,40 +189,81 @@ export default function AnalyticsScreen() {
       ) : (
         <ScrollView
           showsVerticalScrollIndicator={false}
-          contentContainerStyle={styles.scrollContent}
-        >
+          contentContainerStyle={styles.scrollContent}>
           {/* Summary row */}
           <View style={styles.summaryRow}>
-            <Card style={[styles.summaryCard, { flex: 1 }]} elevation={2}>
-              <View style={[styles.summaryIconBadge, { backgroundColor: theme.colors.income + '20' }]}>
-                <Icon name="arrow-down-circle-outline" size={20} color={theme.colors.income} />
+            <Card style={[styles.summaryCard, {flex: 1}]} elevation={2}>
+              <View
+                style={[
+                  styles.summaryIconBadge,
+                  {backgroundColor: theme.colors.income + '20'},
+                ]}>
+                <Icon
+                  name="arrow-down-circle-outline"
+                  size={20}
+                  color={theme.colors.income}
+                />
               </View>
-              <Text style={[styles.summaryLabel, { color: theme.colors.textSecondary }]}>
+              <Text
+                style={[
+                  styles.summaryLabel,
+                  {color: theme.colors.textSecondary},
+                ]}>
                 Income
               </Text>
-              <Text style={[styles.summaryAmount, { color: theme.colors.income }]}>
-                {formatCurrency(summary.credit, { compact: true })}
+              <Text
+                style={[styles.summaryAmount, {color: theme.colors.income}]}>
+                {formatCurrency(summary.credit, {compact: true})}
               </Text>
             </Card>
-            <Card style={[styles.summaryCard, { flex: 1 }]} elevation={2}>
-              <View style={[styles.summaryIconBadge, { backgroundColor: theme.colors.expense + '20' }]}>
-                <Icon name="arrow-up-circle-outline" size={20} color={theme.colors.expense} />
+            <Card style={[styles.summaryCard, {flex: 1}]} elevation={2}>
+              <View
+                style={[
+                  styles.summaryIconBadge,
+                  {backgroundColor: theme.colors.expense + '20'},
+                ]}>
+                <Icon
+                  name="arrow-up-circle-outline"
+                  size={20}
+                  color={theme.colors.expense}
+                />
               </View>
-              <Text style={[styles.summaryLabel, { color: theme.colors.textSecondary }]}>
+              <Text
+                style={[
+                  styles.summaryLabel,
+                  {color: theme.colors.textSecondary},
+                ]}>
                 Expenses
               </Text>
-              <Text style={[styles.summaryAmount, { color: theme.colors.expense }]}>
-                {formatCurrency(summary.debit, { compact: true })}
+              <Text
+                style={[styles.summaryAmount, {color: theme.colors.expense}]}>
+                {formatCurrency(summary.debit, {compact: true})}
               </Text>
             </Card>
-            <Card style={[styles.summaryCard, { flex: 1 }]} elevation={2}>
-              <View style={[styles.summaryIconBadge, { backgroundColor: theme.colors.primary + '20' }]}>
-                <Icon name="swap-vertical" size={20} color={theme.colors.primary} />
+            <Card style={[styles.summaryCard, {flex: 1}]} elevation={2}>
+              <View
+                style={[
+                  styles.summaryIconBadge,
+                  {backgroundColor: theme.colors.primary + '20'},
+                ]}>
+                <Icon
+                  name="swap-vertical"
+                  size={20}
+                  color={theme.colors.primary}
+                />
               </View>
-              <Text style={[styles.summaryLabel, { color: theme.colors.textSecondary }]}>
+              <Text
+                style={[
+                  styles.summaryLabel,
+                  {color: theme.colors.textSecondary},
+                ]}>
                 Transactions
               </Text>
-              <Text style={[styles.summaryAmount, { color: theme.colors.textPrimary }]}>
+              <Text
+                style={[
+                  styles.summaryAmount,
+                  {color: theme.colors.textPrimary},
+                ]}>
                 {summary.count}
               </Text>
             </Card>
@@ -205,23 +274,36 @@ export default function AnalyticsScreen() {
             <View style={styles.highlightRow}>
               {highestIncome && (
                 <TouchableOpacity
-                  style={{ flex: 1 }}
+                  style={{flex: 1}}
                   activeOpacity={0.8}
                   onPress={() =>
-                    navigation.navigate('TransactionDetail', { id: highestIncome.id })
-                  }
-                >
+                    navigation.navigate('TransactionDetail', {
+                      id: highestIncome.id,
+                    })
+                  }>
                   <Card style={styles.highlightCard} elevation={2}>
-                    <Text style={[styles.highlightChip, { color: theme.colors.income }]}>
+                    <Text
+                      style={[
+                        styles.highlightChip,
+                        {color: theme.colors.income},
+                      ]}>
                       ↑ Highest Income
                     </Text>
                     <Text
-                      style={[styles.highlightMerchant, { color: theme.colors.textPrimary }]}
-                      numberOfLines={1}
-                    >
-                      {highestIncome.merchant || highestIncome.description || 'Credit'}
+                      style={[
+                        styles.highlightMerchant,
+                        {color: theme.colors.textPrimary},
+                      ]}
+                      numberOfLines={1}>
+                      {highestIncome.merchant ||
+                        highestIncome.description ||
+                        'Credit'}
                     </Text>
-                    <Text style={[styles.highlightAmount, { color: theme.colors.income }]}>
+                    <Text
+                      style={[
+                        styles.highlightAmount,
+                        {color: theme.colors.income},
+                      ]}>
                       {formatAmountWithSign(highestIncome.amount, 'credit')}
                     </Text>
                   </Card>
@@ -229,23 +311,36 @@ export default function AnalyticsScreen() {
               )}
               {highestExpense && (
                 <TouchableOpacity
-                  style={{ flex: 1 }}
+                  style={{flex: 1}}
                   activeOpacity={0.8}
                   onPress={() =>
-                    navigation.navigate('TransactionDetail', { id: highestExpense.id })
-                  }
-                >
+                    navigation.navigate('TransactionDetail', {
+                      id: highestExpense.id,
+                    })
+                  }>
                   <Card style={styles.highlightCard} elevation={2}>
-                    <Text style={[styles.highlightChip, { color: theme.colors.expense }]}>
+                    <Text
+                      style={[
+                        styles.highlightChip,
+                        {color: theme.colors.expense},
+                      ]}>
                       ↓ Highest Expense
                     </Text>
                     <Text
-                      style={[styles.highlightMerchant, { color: theme.colors.textPrimary }]}
-                      numberOfLines={1}
-                    >
-                      {highestExpense.merchant || highestExpense.description || 'Debit'}
+                      style={[
+                        styles.highlightMerchant,
+                        {color: theme.colors.textPrimary},
+                      ]}
+                      numberOfLines={1}>
+                      {highestExpense.merchant ||
+                        highestExpense.description ||
+                        'Debit'}
                     </Text>
-                    <Text style={[styles.highlightAmount, { color: theme.colors.expense }]}>
+                    <Text
+                      style={[
+                        styles.highlightAmount,
+                        {color: theme.colors.expense},
+                      ]}>
                       {formatAmountWithSign(highestExpense.amount, 'debit')}
                     </Text>
                   </Card>
@@ -256,7 +351,8 @@ export default function AnalyticsScreen() {
 
           {/* Monthly Trend */}
           <Card style={styles.sectionCard} elevation={2}>
-            <Text style={[styles.sectionTitle, { color: theme.colors.textPrimary }]}>
+            <Text
+              style={[styles.sectionTitle, {color: theme.colors.textPrimary}]}>
               Monthly Trend
             </Text>
             <MonthlyTrendChart data={trendData} />
@@ -265,7 +361,11 @@ export default function AnalyticsScreen() {
           {/* Category Breakdown */}
           {categoryData.length > 0 && (
             <Card style={styles.sectionCard} elevation={2}>
-              <Text style={[styles.sectionTitle, { color: theme.colors.textPrimary }]}>
+              <Text
+                style={[
+                  styles.sectionTitle,
+                  {color: theme.colors.textPrimary},
+                ]}>
                 Category Breakdown
               </Text>
               <SpendingPieChart data={categoryData} size={220} />
@@ -275,7 +375,11 @@ export default function AnalyticsScreen() {
           {/* Top Categories */}
           {categoryData.length > 0 && (
             <Card style={styles.sectionCard} elevation={2}>
-              <Text style={[styles.sectionTitle, { color: theme.colors.textPrimary }]}>
+              <Text
+                style={[
+                  styles.sectionTitle,
+                  {color: theme.colors.textPrimary},
+                ]}>
                 Top Categories
               </Text>
               <CategoryBarChart data={categoryData} maxItems={6} />
@@ -285,7 +389,11 @@ export default function AnalyticsScreen() {
           {/* Daily Spending Pattern */}
           {dayData.length > 0 && (
             <Card style={styles.sectionCard} elevation={2}>
-              <Text style={[styles.sectionTitle, { color: theme.colors.textPrimary }]}>
+              <Text
+                style={[
+                  styles.sectionTitle,
+                  {color: theme.colors.textPrimary},
+                ]}>
                 Daily Spending Pattern
               </Text>
               <View style={styles.dailyContainer}>
@@ -296,16 +404,17 @@ export default function AnalyticsScreen() {
                   return (
                     <View key={day.date} style={styles.dayRow}>
                       <Text
-                        style={[styles.dayLabel, { color: theme.colors.textSecondary }]}
-                      >
+                        style={[
+                          styles.dayLabel,
+                          {color: theme.colors.textSecondary},
+                        ]}>
                         {dayNum}
                       </Text>
                       <View
                         style={[
                           styles.dayBarTrack,
-                          { backgroundColor: theme.colors.border },
-                        ]}
-                      >
+                          {backgroundColor: theme.colors.border},
+                        ]}>
                         <View
                           style={[
                             styles.dayBarFill,
@@ -320,9 +429,11 @@ export default function AnalyticsScreen() {
                         />
                       </View>
                       <Text
-                        style={[styles.dayAmount, { color: theme.colors.textSecondary }]}
-                      >
-                        {formatCurrency(day.debit, { compact: true })}
+                        style={[
+                          styles.dayAmount,
+                          {color: theme.colors.textSecondary},
+                        ]}>
+                        {formatCurrency(day.debit, {compact: true})}
                       </Text>
                     </View>
                   );

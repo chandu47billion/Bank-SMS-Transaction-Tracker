@@ -1,6 +1,6 @@
 import React from 'react';
-import { Text, StyleSheet } from 'react-native';
-import { Portal, Dialog, Button, useTheme } from 'react-native-paper';
+import {Text, StyleSheet} from 'react-native';
+import {Portal, Dialog, Button, useTheme} from 'react-native-paper';
 
 export default function ConfirmDialog({
   visible,
@@ -20,13 +20,12 @@ export default function ConfirmDialog({
       <Dialog
         visible={visible}
         onDismiss={onCancel}
-        style={[styles.dialog, { backgroundColor: theme.colors.surface }]}
-      >
-        <Dialog.Title style={[styles.title, { color: theme.colors.textPrimary }]}>
+        style={[styles.dialog, {backgroundColor: theme.colors.surface}]}>
+        <Dialog.Title style={[styles.title, {color: theme.colors.textPrimary}]}>
           {title}
         </Dialog.Title>
         <Dialog.Content>
-          <Text style={[styles.message, { color: theme.colors.textSecondary }]}>
+          <Text style={[styles.message, {color: theme.colors.textSecondary}]}>
             {message}
           </Text>
         </Dialog.Content>
@@ -34,15 +33,13 @@ export default function ConfirmDialog({
           <Button
             textColor={theme.colors.textSecondary}
             onPress={onCancel}
-            labelStyle={styles.actionLabel}
-          >
+            labelStyle={styles.actionLabel}>
             {cancelLabel}
           </Button>
           <Button
             textColor={confirmColor}
             onPress={onConfirm}
-            labelStyle={[styles.actionLabel, { fontWeight: '700' }]}
-          >
+            labelStyle={[styles.actionLabel, {fontWeight: '700'}]}>
             {confirmLabel}
           </Button>
         </Dialog.Actions>

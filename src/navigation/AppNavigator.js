@@ -5,8 +5,8 @@
  */
 
 import React from 'react';
-import { createStackNavigator } from '@react-navigation/stack';
-import { useApp } from '../store/AppContext';
+import {createStackNavigator} from '@react-navigation/stack';
+import {useApp} from '../store/AppContext';
 
 import SplashScreen from '../screens/SplashScreen';
 import OnboardingScreen from '../screens/onboarding/OnboardingScreen';
@@ -22,11 +22,11 @@ import PremiumScreen from '../screens/premium/PremiumScreen';
 const Stack = createStackNavigator();
 
 export default function AppNavigator() {
-  const { isReady, onboardingComplete, smsPermissionGranted } = useApp();
+  const {isReady, onboardingComplete, smsPermissionGranted} = useApp();
 
   if (!isReady) {
     return (
-      <Stack.Navigator screenOptions={{ headerShown: false }}>
+      <Stack.Navigator screenOptions={{headerShown: false}}>
         <Stack.Screen name="Splash" component={SplashScreen} />
       </Stack.Navigator>
     );
@@ -39,14 +39,16 @@ export default function AppNavigator() {
     : 'Main';
 
   return (
-    <Stack.Navigator initialRouteName={initialRouteName} screenOptions={{ headerShown: false }}>
+    <Stack.Navigator
+      initialRouteName={initialRouteName}
+      screenOptions={{headerShown: false}}>
       <Stack.Screen name="Onboarding" component={OnboardingScreen} />
       <Stack.Screen name="Permission" component={PermissionScreen} />
       <Stack.Screen name="Main" component={BottomTabNavigator} />
       <Stack.Screen
         name="TransactionDetail"
         component={TransactionDetailScreen}
-        options={{ presentation: 'card', animationEnabled: true }}
+        options={{presentation: 'card', animationEnabled: true}}
       />
       <Stack.Screen name="Categories" component={CategoriesScreen} />
       <Stack.Screen name="Notifications" component={NotificationsScreen} />

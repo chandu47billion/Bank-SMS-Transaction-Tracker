@@ -1,8 +1,8 @@
 import React from 'react';
-import { TouchableOpacity, View, StyleSheet, Platform } from 'react-native';
-import { useTheme } from 'react-native-paper';
+import {TouchableOpacity, View, StyleSheet, Platform} from 'react-native';
+import {useTheme} from 'react-native-paper';
 
-export default function Card({ children, style, onPress, elevation = 2 }) {
+export default function Card({children, style, onPress, elevation = 2}) {
   const theme = useTheme();
 
   const cardStyle = [
@@ -17,11 +17,7 @@ export default function Card({ children, style, onPress, elevation = 2 }) {
 
   if (onPress) {
     return (
-      <TouchableOpacity
-        onPress={onPress}
-        activeOpacity={0.8}
-        style={cardStyle}
-      >
+      <TouchableOpacity onPress={onPress} activeOpacity={0.8} style={cardStyle}>
         {children}
       </TouchableOpacity>
     );
@@ -32,13 +28,13 @@ export default function Card({ children, style, onPress, elevation = 2 }) {
 
 function shadowStyle(elevation) {
   if (Platform.OS === 'android') {
-    return { elevation };
+    return {elevation};
   }
   const shadowOpacity = 0.04 + elevation * 0.03;
   const shadowRadius = elevation * 2;
   return {
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: elevation },
+    shadowOffset: {width: 0, height: elevation},
     shadowOpacity,
     shadowRadius,
   };

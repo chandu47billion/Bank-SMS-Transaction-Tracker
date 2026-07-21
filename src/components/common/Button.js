@@ -1,6 +1,6 @@
 import React from 'react';
-import { StyleSheet } from 'react-native';
-import { Button as PaperButton, useTheme } from 'react-native-paper';
+import {StyleSheet} from 'react-native';
+import {Button as PaperButton, useTheme} from 'react-native-paper';
 
 export default function Button({
   title,
@@ -25,19 +25,10 @@ export default function Button({
       loading={loading}
       disabled={disabled || loading}
       buttonColor={mode === 'contained' ? buttonColor : undefined}
-      textColor={
-        mode === 'contained'
-          ? '#FFFFFF'
-          : buttonColor
-      }
-      style={[
-        styles.button,
-        fullWidth && styles.fullWidth,
-        style,
-      ]}
+      textColor={mode === 'contained' ? '#FFFFFF' : buttonColor}
+      style={[styles.button, fullWidth && styles.fullWidth, style]}
       contentStyle={styles.content}
-      labelStyle={styles.label}
-    >
+      labelStyle={styles.label}>
       {title}
     </PaperButton>
   );

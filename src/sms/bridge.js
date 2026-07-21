@@ -5,17 +5,22 @@
  * (e.g. Metro-only JS bundling, unit tests, or iOS).
  */
 
-import { Platform, NativeModules } from 'react-native';
-import { PERMISSIONS, RESULTS, requestMultiple, checkMultiple } from 'react-native-permissions';
-import { parseSmsBatch } from './parser';
+import {Platform, NativeModules} from 'react-native';
+import {
+  PERMISSIONS,
+  RESULTS,
+  requestMultiple,
+  checkMultiple,
+} from 'react-native-permissions';
+import {parseSmsBatch} from './parser';
 
 // react-native-sms exposes a `SmsAndroid`-like native module on Android.
 // We resolve it lazily/defensively since it may not be present in every
 // environment (e.g. when running JS-only tooling/tests).
 function getSmsModule() {
   try {
-    // eslint-disable-next-line global-require
-    const SmsAndroid = require('react-native-sms').SmsAndroid || NativeModules.SmsAndroid;
+    const SmsAndroid =
+      require('react-native-sms').SmsAndroid || NativeModules.SmsAndroid;
     return SmsAndroid || null;
   } catch (e) {
     return NativeModules.SmsAndroid || null;
@@ -30,9 +35,14 @@ export const SMS_RECEIVE_PERMISSION = 'android.permission.RECEIVE_SMS';
  * Returns true if granted.
  */
 export async function requestSmsPermission() {
-  if (Platform.OS !== 'android') return false;
+  if (Platform.OS !== 'android') {
+    return false;
+  }
   try {
-    const statuses = await requestMultiple([PERMISSIONS.ANDROID.READ_SMS, PERMISSIONS.ANDROID.RECEIVE_SMS]);
+    const statuses = await requestMultiple([
+      PERMISSIONS.ANDROID.READ_SMS,
+      PERMISSIONS.ANDROID.RECEIVE_SMS,
+    ]);
     return (
       statuses[PERMISSIONS.ANDROID.READ_SMS] === RESULTS.GRANTED &&
       statuses[PERMISSIONS.ANDROID.RECEIVE_SMS] === RESULTS.GRANTED
@@ -43,9 +53,14 @@ export async function requestSmsPermission() {
 }
 
 export async function checkSmsPermission() {
-  if (Platform.OS !== 'android') return false;
+  if (Platform.OS !== 'android') {
+    return false;
+  }
   try {
-    const statuses = await checkMultiple([PERMISSIONS.ANDROID.READ_SMS, PERMISSIONS.ANDROID.RECEIVE_SMS]);
+    const statuses = await checkMultiple([
+      PERMISSIONS.ANDROID.READ_SMS,
+      PERMISSIONS.ANDROID.RECEIVE_SMS,
+    ]);
     return (
       statuses[PERMISSIONS.ANDROID.READ_SMS] === RESULTS.GRANTED &&
       statuses[PERMISSIONS.ANDROID.RECEIVE_SMS] === RESULTS.GRANTED
@@ -60,7 +75,7 @@ export async function checkSmsPermission() {
  * sender ids/keywords, then runs them through the parsing pipeline.
  * Resolves to an array of normalized transaction objects.
  */
-export function readAndParseInboxSms({ maxCount = 200 } = {}) {
+export function readAndParseInboxSms({maxCount = 200} = {}) {
   return new Promise(resolve => {
     const SmsAndroid = getSmsModule();
     if (!SmsAndroid || typeof SmsAndroid.list !== 'function') {
@@ -84,7 +99,9 @@ export function readAndParseInboxSms({ maxCount = 200 } = {}) {
           const normalized = smsArray.map(sms => ({
             body: sms.body,
             sender: sms.address,
-            timestamp: sms.date ? new Date(Number(sms.date)).toISOString() : new Date().toISOString(),
+            timestamp: sms.date
+              ? new Date(Number(sms.date)).toISOString()
+              : new Date().toISOString(),
           }));
           resolve(parseSmsBatch(normalized));
         } catch (e) {

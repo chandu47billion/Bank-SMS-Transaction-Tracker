@@ -3,10 +3,14 @@
  * (and UPI/ATM signals) to one of the known category ids.
  */
 
-import { CATEGORIES } from '../data/categories';
-import { UPI_PATTERN, ATM_PATTERN } from './patterns';
+import {CATEGORIES} from '../data/categories';
+import {UPI_PATTERN, ATM_PATTERN} from './patterns';
 
-export function categorizeTransaction({ merchant = '', description = '', type = 'debit' }) {
+export function categorizeTransaction({
+  merchant = '',
+  description = '',
+  type = 'debit',
+}) {
   const text = `${merchant} ${description}`.toLowerCase();
 
   if (type === 'credit' && /salary|payroll|sal credit/i.test(text)) {
@@ -14,7 +18,12 @@ export function categorizeTransaction({ merchant = '', description = '', type = 
   }
 
   for (const category of CATEGORIES) {
-    if (category.id === 'others' || category.id === 'upi' || category.id === 'atm' || category.id === 'salary') {
+    if (
+      category.id === 'others' ||
+      category.id === 'upi' ||
+      category.id === 'atm' ||
+      category.id === 'salary'
+    ) {
       continue;
     }
     if (category.keywords.some(kw => text.includes(kw))) {
@@ -22,10 +31,14 @@ export function categorizeTransaction({ merchant = '', description = '', type = 
     }
   }
 
-  if (ATM_PATTERN.test(text)) return 'atm';
-  if (UPI_PATTERN.test(text)) return 'upi';
+  if (ATM_PATTERN.test(text)) {
+    return 'atm';
+  }
+  if (UPI_PATTERN.test(text)) {
+    return 'upi';
+  }
 
   return 'others';
 }
 
-export default { categorizeTransaction };
+export default {categorizeTransaction};

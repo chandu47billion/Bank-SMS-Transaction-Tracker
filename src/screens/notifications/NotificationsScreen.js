@@ -1,20 +1,15 @@
-import React, { useMemo } from 'react';
-import {
-  View,
-  Text,
-  StyleSheet,
-  FlatList,
-} from 'react-native';
-import { useTheme, IconButton } from 'react-native-paper';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import { useNavigation } from '@react-navigation/native';
+import React, {useMemo} from 'react';
+import {View, Text, StyleSheet, FlatList} from 'react-native';
+import {useTheme, IconButton} from 'react-native-paper';
+import {SafeAreaView} from 'react-native-safe-area-context';
+import {useNavigation} from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
-import { useApp } from '../../store/AppContext';
-import { generateNotifications } from '../../utils/notifications';
-import { formatDayLabel, formatTime } from '../../utils/formatters';
-import { EmptyState } from '../../components/common';
-import { Card } from '../../components/common';
+import {useApp} from '../../store/AppContext';
+import {generateNotifications} from '../../utils/notifications';
+import {formatDayLabel, formatTime} from '../../utils/formatters';
+import {EmptyState} from '../../components/common';
+import {Card} from '../../components/common';
 
 function isToday(isoString) {
   const d = new Date(isoString);
@@ -29,7 +24,7 @@ function isToday(isoString) {
 export default function NotificationsScreen() {
   const theme = useTheme();
   const navigation = useNavigation();
-  const { transactions } = useApp();
+  const {transactions} = useApp();
 
   const notifications = useMemo(
     () => generateNotifications(transactions),
@@ -40,31 +35,40 @@ export default function NotificationsScreen() {
     const today = [];
     const earlier = [];
     notifications.forEach(n => {
-      if (isToday(n.timestamp)) today.push(n);
-      else earlier.push(n);
+      if (isToday(n.timestamp)) {
+        today.push(n);
+      } else {
+        earlier.push(n);
+      }
     });
     const sections = [];
-    if (today.length > 0) sections.push({ key: 'today', label: 'Today', items: today });
-    if (earlier.length > 0) sections.push({ key: 'earlier', label: 'Earlier', items: earlier });
+    if (today.length > 0) {
+      sections.push({key: 'today', label: 'Today', items: today});
+    }
+    if (earlier.length > 0) {
+      sections.push({key: 'earlier', label: 'Earlier', items: earlier});
+    }
     return sections;
   }, [notifications]);
 
   const s = styles(theme);
 
-  const renderNotification = (item) => (
+  const renderNotification = item => (
     <Card key={item.id} style={s.notifCard}>
       <View style={s.notifRow}>
-        <View style={[s.iconCircle, { backgroundColor: item.color + '22' }]}>
+        <View style={[s.iconCircle, {backgroundColor: item.color + '22'}]}>
           <Icon name={item.icon} size={22} color={item.color} />
         </View>
         <View style={s.notifBody}>
-          <Text style={[s.notifTitle, { color: theme.colors.textPrimary }]}>
+          <Text style={[s.notifTitle, {color: theme.colors.textPrimary}]}>
             {item.title}
           </Text>
-          <Text style={[s.notifMessage, { color: theme.colors.textSecondary }]} numberOfLines={2}>
+          <Text
+            style={[s.notifMessage, {color: theme.colors.textSecondary}]}
+            numberOfLines={2}>
             {item.message}
           </Text>
-          <Text style={[s.notifTime, { color: theme.colors.textSecondary }]}>
+          <Text style={[s.notifTime, {color: theme.colors.textSecondary}]}>
             {formatDayLabel(item.timestamp)} · {formatTime(item.timestamp)}
           </Text>
         </View>
@@ -73,7 +77,9 @@ export default function NotificationsScreen() {
   );
 
   return (
-    <SafeAreaView style={[s.safe, { backgroundColor: theme.colors.background }]} edges={['top']}>
+    <SafeAreaView
+      style={[s.safe, {backgroundColor: theme.colors.background}]}
+      edges={['top']}>
       <View style={s.header}>
         <IconButton
           icon="arrow-left"
@@ -82,7 +88,7 @@ export default function NotificationsScreen() {
           onPress={() => navigation.goBack()}
           style={s.backBtn}
         />
-        <Text style={[s.headerTitle, { color: theme.colors.textPrimary }]}>
+        <Text style={[s.headerTitle, {color: theme.colors.textPrimary}]}>
           Notifications
         </Text>
         <View style={s.headerSpacer} />
@@ -98,9 +104,10 @@ export default function NotificationsScreen() {
         <FlatList
           data={grouped}
           keyExtractor={section => section.key}
-          renderItem={({ item: section }) => (
+          renderItem={({item: section}) => (
             <View>
-              <Text style={[s.sectionHeader, { color: theme.colors.textSecondary }]}>
+              <Text
+                style={[s.sectionHeader, {color: theme.colors.textSecondary}]}>
                 {section.label}
               </Text>
               {section.items.map(n => renderNotification(n))}

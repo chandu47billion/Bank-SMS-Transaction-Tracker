@@ -1,6 +1,6 @@
 import React from 'react';
-import { StyleSheet } from 'react-native';
-import { Searchbar as PaperSearchbar, useTheme } from 'react-native-paper';
+import {StyleSheet} from 'react-native';
+import {Searchbar as PaperSearchbar, useTheme} from 'react-native-paper';
 
 export default function SearchBar({
   value,
@@ -25,7 +25,7 @@ export default function SearchBar({
           borderColor: theme.colors.border,
         },
       ]}
-      inputStyle={[styles.input, { color: theme.colors.textPrimary }]}
+      inputStyle={[styles.input, {color: theme.colors.textPrimary}]}
       iconColor={theme.colors.textSecondary}
       placeholderTextColor={theme.colors.textSecondary}
       elevation={0}

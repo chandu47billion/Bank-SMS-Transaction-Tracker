@@ -1,22 +1,18 @@
-import React, { useState, useMemo, useRef, useCallback } from 'react';
-import {
-  View,
-  FlatList,
-  StyleSheet,
-} from 'react-native';
-import { useTheme } from 'react-native-paper';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import React, {useState, useMemo, useRef, useCallback} from 'react';
+import {View, FlatList, StyleSheet} from 'react-native';
+import {useTheme} from 'react-native-paper';
+import {SafeAreaView} from 'react-native-safe-area-context';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import { useNavigation } from '@react-navigation/native';
+import {useNavigation} from '@react-navigation/native';
 
-import { useApp } from '../../store/AppContext';
-import { debounce } from '../../utils/helpers';
-import { TransactionItem, EmptyState, SearchBar } from '../../components/common';
+import {useApp} from '../../store/AppContext';
+import {debounce} from '../../utils/helpers';
+import {TransactionItem, EmptyState, SearchBar} from '../../components/common';
 
 export default function SearchScreen() {
   const theme = useTheme();
   const navigation = useNavigation();
-  const { transactions } = useApp();
+  const {transactions} = useApp();
 
   const [query, setQuery] = useState('');
   const [debouncedQuery, setDebouncedQuery] = useState('');
@@ -33,7 +29,9 @@ export default function SearchScreen() {
 
   const results = useMemo(() => {
     const q = debouncedQuery.trim().toLowerCase();
-    if (!q) return [];
+    if (!q) {
+      return [];
+    }
     return transactions.filter(
       t =>
         (t.merchant && t.merchant.toLowerCase().includes(q)) ||
@@ -45,10 +43,10 @@ export default function SearchScreen() {
   }, [transactions, debouncedQuery]);
 
   const renderItem = useCallback(
-    ({ item }) => (
+    ({item}) => (
       <TransactionItem
         transaction={item}
-        onPress={() => navigation.navigate('TransactionDetail', { id: item.id })}
+        onPress={() => navigation.navigate('TransactionDetail', {id: item.id})}
       />
     ),
     [navigation],
@@ -56,7 +54,9 @@ export default function SearchScreen() {
 
   const renderSeparator = useCallback(
     () => (
-      <View style={[styles.separator, { backgroundColor: theme.colors.border }]} />
+      <View
+        style={[styles.separator, {backgroundColor: theme.colors.border}]}
+      />
     ),
     [theme.colors.border],
   );
@@ -84,21 +84,18 @@ export default function SearchScreen() {
 
   return (
     <SafeAreaView
-      style={[styles.safe, { backgroundColor: theme.colors.background }]}
-      edges={['top']}
-    >
+      style={[styles.safe, {backgroundColor: theme.colors.background}]}
+      edges={['top']}>
       <View
         style={[
           styles.searchRow,
-          { borderBottomColor: theme.colors.border, backgroundColor: theme.colors.background },
-        ]}
-      >
+          {
+            borderBottomColor: theme.colors.border,
+            backgroundColor: theme.colors.background,
+          },
+        ]}>
         <View
-          style={[
-            styles.backBtn,
-            { backgroundColor: theme.colors.background },
-          ]}
-        >
+          style={[styles.backBtn, {backgroundColor: theme.colors.background}]}>
           <Icon
             name="arrow-left"
             size={24}
